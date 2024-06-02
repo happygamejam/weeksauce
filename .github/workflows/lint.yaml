@@ -1,4 +1,4 @@
-name: Linting validation (clang-tidy)
+name: Linting
 
 on:
   push:
