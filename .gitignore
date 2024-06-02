@@ -31,7 +31,10 @@
 # VSCode History Files
 **/.history
 
+# clangd cache
+.cache/
+
 #################################
 # Miscellaneous Generated Files #
 #################################
-# ADD AS NEED BE
+compile_commands.json
