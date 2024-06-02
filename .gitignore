@@ -31,8 +31,9 @@
 # VSCode History Files
 **/.history
 
-# clangd cache
+# clang stuff
 .cache/
+clang-tidy-output.log
 
 #################################
 # Miscellaneous Generated Files #

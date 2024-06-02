@@ -21,3 +21,10 @@ gen-clangd: check-env
 	$(_BUILD_BASE) -mode=GenerateClangDatabase && \
 	cp $(UNREAL_PATH)/compile_commands.json $(PWD)/compile_commands.json
 
+.PHONY: lint
+lint: gen-clangd
+	find $(PWD)/Source -name "*.cpp" -or -name "*.h" | xargs -I {} clang-tidy -p=compile_commands.json -quiet {}
+
+.PHONY: lint-ci
+lint-ci:
+	$(MAKE) lint 2>&1 | tee clang-tidy-output.log
