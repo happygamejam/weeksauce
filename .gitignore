@@ -30,6 +30,7 @@
 .vscode
 # VSCode History Files
 **/.history
+*.code-workspace
 
 # clang stuff
 .cache/
