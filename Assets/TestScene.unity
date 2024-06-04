@@ -364,7 +364,9 @@ MonoBehaviour:
   rooms:
   - room: {fileID: 5771815153832966136, guid: 6fae223d5ea92f2b78b17cf89960ea74, type: 3}
     Weight: 1
-  - room: {fileID: 5771815153832966136, guid: 6fae223d5ea92f2b78b17cf89960ea74, type: 3}
+  - room: {fileID: 5771815153832966136, guid: 0628131d26561bd769f599c934777dc8, type: 3}
+    Weight: 1
+  - room: {fileID: 5771815153832966136, guid: 1e2f5405486c4cf3e994e0d74357459f, type: 3}
     Weight: 1
 --- !u!4 &1049580756
 Transform:

@@ -14,6 +14,7 @@ public class WeightedList<T> : IEnumerable<T> where T : IWeighted
     {
         _items = items;
 
+        Debug.Log("Using seed: " + seed);
         if (seed < 0)
         {
             _random = new System.Random();
@@ -38,7 +39,7 @@ public class WeightedList<T> : IEnumerable<T> where T : IWeighted
             total += item.Weight;
         }
 
-        float random = Random.Range(0, total);
+        float random = (float)_random.NextDouble() * total;
 
         foreach (var item in _items)
         {
