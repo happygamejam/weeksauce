@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: TestDungeon
   m_EditorClassIdentifier: 
   seed: -1
-  roomCount: 4
+  roomCount: 1
   preventDuplicates: 0

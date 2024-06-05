@@ -4,9 +4,18 @@ public class EmptyRoom : Room
 {
     public EmptyRoom(): base(25) { }
 
-    public override GameObject Generate()
+    public override GameObject Generate(DungeonParameters parameters)
     {
         Debug.Log("Generating an empty room");
-        return Instantiate(gameObject, new Vector3(0, 0, 0), Quaternion.identity);
+        var room = Instantiate(gameObject, new Vector3(0, 0, 0), Quaternion.identity);
+        var provider = room.GetComponent<DungeonParametersProvider>();
+        if (provider == null)
+        {
+            Debug.LogError("Failed to set parameters on EmptyRoom. Room prefabs must have a DungeonParametersProvider component.");
+            return room;
+        }
+        provider.SetParameters(parameters);
+
+        return room;
     }
 }
