@@ -7,7 +7,7 @@ public abstract class Room : MonoBehaviour
    private float offset;
    public float Offset => offset;
 
-   public abstract GameObject Generate();
+   public abstract GameObject Generate(DungeonParameters parameters);
 
    protected Room(float offset) {
       this.offset = offset;
