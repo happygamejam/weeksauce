@@ -9,8 +9,12 @@ public class DungeonBuilder : MonoBehaviour
     [SerializeField]
     private List<WeightedRoom> rooms;
 
-    void Start()
-    {
+    private void OnEnable() {
+        var dungeonParameters = DungeonManager.ActiveDungeon;
+        if (dungeonParameters == null) {
+            dungeonParameters = this.dungeonParameters;
+        }
+
         Debug.Assert(dungeonParameters != null, "DungeonParameters is not set in DungeonBuilder");
         Generate(dungeonParameters);
     }

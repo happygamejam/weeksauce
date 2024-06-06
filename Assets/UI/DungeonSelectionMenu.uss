@@ -6,7 +6,7 @@ Label {
     flex-grow: 1;
     align-items: center;
     justify-content: center;
-    background-color: rgb(115, 37, 38);
+    background-color: rgb(26, 26, 26);
 }
 
 #main-container {
@@ -17,32 +17,43 @@ Label {
 #dungeon-list-container {
     flex-direction: row;
     height: 85%;
+    color: rgb(212, 212, 212);
 }
 
 #play-button {
     height: 48px;
     width: 100%;
-    border-color: rgb(49, 26, 17);
-    border-width: 2px;
-    background-color: rgb(110, 57, 37);
+    border-width: 0px;
+    background-color: rgb(132, 0, 0);
     border-radius: 8px;
 
     -unity-font-style: bold;
     font-size: 24px;
+    color: rgb(212, 212, 212);
 }
 
 #play-button:hover {
-    background-color: rgb(50, 57, 37);
+    background-color: rgb(160, 0, 0);
 }
 
 #dungeon-list {
     width: 240px;
-    border-color: rgb(49, 26, 17);
-    border-width: 2px;
-    background-color: rgb(110, 57, 37);
+    background-color: rgb(43, 43, 43);
     border-radius: 8px;
     margin-right: 8px;
     padding: 4px;
+}
+
+.unity-list-view__item:hover {
+    background-color: none;
+}
+
+.unity-list-view__item:selected {
+    background-color: none;
+}
+
+.unity-list-view__item:selected > #list-entry {
+    background-color: rgb(160, 0, 0);
 }
 
 #dungeon-name {
@@ -76,9 +87,7 @@ Label {
 
 #details-container {
     align-items: center; 
-    background-color: rgb(170, 89, 57); 
-    border-width: 2px; 
-    border-color: rgb(49, 26, 17);
+    background-color: rgb(43, 43, 43); 
     border-radius: 8px;
     width: 480px; 
     justify-content: center; 
@@ -87,13 +96,11 @@ Label {
 }
 
 #details {
-    border-color: rgb(49, 26, 17); 
-    border-width: 2px; 
     height: 60px; 
     width: 120px; 
     border-radius: 8px; 
     padding: 4px;
-    background-color: rgb(255, 133, 84);
+    background-color: rgb(212, 212, 212); 
 }
 
 #dungeon-portrait {

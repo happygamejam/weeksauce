@@ -10,7 +10,6 @@ public class DungeonSelectionMenu : MonoBehaviour
     {
         var uiDocument = GetComponent<UIDocument>();
     
-        Debug.Log("Setting up Duingeon List Controller");
         var controller = new DungeonListController();
         controller.Initialize(uiDocument.rootVisualElement, dungeonEntryTemplate);
     }

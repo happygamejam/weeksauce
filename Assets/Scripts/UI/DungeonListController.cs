@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
 public class DungeonListController
@@ -11,8 +12,10 @@ public class DungeonListController
     private Label dungeonName;
     private Label difficulty;
     private Label rooms;
+    private Button playButton;
 
     private List<DungeonParameters> dungeonList;
+    private DungeonParameters selected;
 
     public void Initialize(VisualElement root, VisualTreeAsset entryTemplate)
     {
@@ -24,6 +27,8 @@ public class DungeonListController
         dungeonName = root.Q<Label>("dungeon-name");
         difficulty = root.Q<Label>("dungeon-difficulty");
         rooms = root.Q<Label>("dungeon-rooms");
+        playButton = root.Q<Button>("play-button");
+        playButton.clicked += OnPlayClicked;
 
         FillList();
 
@@ -74,5 +79,14 @@ public class DungeonListController
         dungeonName.text = dungeon.dungeonName;
         /* difficulty.text = "Difficulty: " + dungeon.difficulty; */
         rooms.text = dungeon.roomCount.ToString();
+    }
+
+    private void OnPlayClicked() {
+        if (selected == null) {
+            Debug.LogError("No dungeon selected.");
+        }
+
+        DungeonManager.SetActiveDungeon(selected);
+        SceneManager.LoadScene("Dungeon");
     }
 }
