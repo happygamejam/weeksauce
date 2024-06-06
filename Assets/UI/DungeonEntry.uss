@@ -1,0 +1,23 @@
+#list-entry {
+    height: 41px;
+    align-items: flex-start;
+    justify-content: center;
+    padding-left: 10px;
+    background-color: rgb(51, 51, 51);
+    border-width: 0px;
+    border-radius: 8px;
+}
+
+#list-entry:hover {
+    background-color: rgb(132, 0, 0);
+}
+
+#list-entry:selected {
+    background-color: rgb(132, 0, 0);
+}
+
+#dungeon-name {
+    -unity-font-style: bold;
+    font-size: 18px;
+    color: rgb(212, 212, 212);
+}

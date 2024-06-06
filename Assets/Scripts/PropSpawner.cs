@@ -39,8 +39,6 @@ public class PropSpawner : MonoBehaviour
         } else {
             random = new System.Random(parameters.seed);
         }
-         
-        Debug.Log("PropSpawner seed: " + parameters.seed);
 
         int index = (int)Math.Round(random.NextDouble() * props.Count) - 1;
         Debug.Log("Spawning prop: " + index);
