@@ -51,7 +51,7 @@ MonoBehaviour:
   spawnPoints:
   - {fileID: 5327735551818404184}
   - {fileID: 6975198002795433153}
-  - {fileID: 905472354724121671}
+  - {fileID: 8704566069594295539}
 --- !u!1 &312387551703635254
 GameObject:
   m_ObjectHideFlags: 0
@@ -2553,7 +2553,7 @@ GameObject:
   - component: {fileID: 6296906323618103321}
   - component: {fileID: 1347108101834692949}
   m_Layer: 0
-  m_Name: Cube (1)
+  m_Name: Chair2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2589,7 +2589,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5578590697247527396}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -2769,7 +2769,7 @@ GameObject:
   - component: {fileID: 2198607019419960886}
   - component: {fileID: 4310811342606895898}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: Chair1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2805,7 +2805,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5611339322805257916}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -3233,7 +3233,7 @@ GameObject:
   - component: {fileID: 1550752733453256370}
   - component: {fileID: 7768538543953789902}
   m_Layer: 0
-  m_Name: Cube (2)
+  m_Name: Chair3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3269,7 +3269,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7177307269224664186}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1

@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6120d8aa2c4287fabbf1ee9f72d8fc4b, type: 3}
   m_Name: TestDungeon
   m_EditorClassIdentifier: 
+  dungeonName: Test Dungeon
   seed: -1
   roomCount: 1
   preventDuplicates: 0
