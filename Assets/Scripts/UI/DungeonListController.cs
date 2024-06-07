@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
 public class DungeonListController
@@ -68,6 +67,7 @@ public class DungeonListController
 
     private void OnDungeonSelected(IEnumerable<object> selected) {
         var dungeon = dungeonListView.selectedItem as DungeonParameters;
+        this.selected = dungeon;
 
         if (dungeon == null) {
             dungeonName.text = "Select a dungeon";
@@ -84,9 +84,9 @@ public class DungeonListController
     private void OnPlayClicked() {
         if (selected == null) {
             Debug.LogError("No dungeon selected.");
+            return;
         }
 
-        DungeonManager.SetActiveDungeon(selected);
-        SceneManager.LoadScene("Dungeon");
+        DungeonManager.StartDungeon(selected);
     }
 }
