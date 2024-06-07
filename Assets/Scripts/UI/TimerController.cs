@@ -1,3 +1,4 @@
+using System;
 using UnityEngine.UIElements;
 
 public class TimerController
@@ -7,6 +8,8 @@ public class TimerController
 
     // UI Elements
     private Label timerLabel;
+
+    public event Action OnTimerEnd;
 
     public void Initialize(VisualElement root)
     {
@@ -21,6 +24,13 @@ public class TimerController
         timerLabel.text = formatTime(time);
     }
 
+    public void Stop() {
+        isRunning = false;
+        time = 0;
+        timerLabel.text = formatTime(time);
+        OnTimerEnd?.Invoke();
+    }
+
     public void Tick(double deltaTime) {
         if (!isRunning) {
             return;
@@ -28,8 +38,8 @@ public class TimerController
 
         time -= deltaTime;
         if (time <= 0) {
-            time = 0;
-            isRunning = false;
+            Stop();
+            return;
         }
 
         timerLabel.text = formatTime(time);
