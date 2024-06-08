@@ -6,9 +6,11 @@ namespace Rooms.RochesColorees
         public int NbSteps;
         public char Symbole;
         public int Case;
-
-        public Step(char symbole, int newCase, int[] direction, int nbSteps)
+        public int Id;
+        
+        public Step(int id, char symbole, int newCase, int[] direction, int nbSteps)
         {
+            Id = id;
             StepDirection = direction;
             NbSteps = nbSteps;
             Symbole = symbole;

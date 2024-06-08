@@ -17,7 +17,7 @@ public class PierreColoree : MonoBehaviour
         _checkpointLevel = newCheckpointLevel;
     }
 
-    public void SetValidLevel(int newValidLevel)
+    public void AddValidLevel(int newValidLevel)
     {
         _validLevels.Add(newValidLevel);
     }

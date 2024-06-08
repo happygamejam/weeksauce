@@ -118,6 +118,37 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &441093496
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 441093497}
+  m_Layer: 0
+  m_Name: ListeCases
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &441093497
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 441093496}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &993797064
 GameObject:
   m_ObjectHideFlags: 0
@@ -376,6 +407,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c0d5175079d34245a4aeb87959d6598, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _tailleX: 8
+  _tailleY: 8
+  _tuileParent: {fileID: 441093496}
+  _tuilePrefab: {fileID: 1443347001811347920, guid: 0d6dcbe9d90660e41a133fcdd325dda8, type: 3}
+  symboles:
+  - {fileID: 2100000, guid: 3ba830f57c0ef0b43ba324eab557d5c4, type: 2}
+  - {fileID: 2100000, guid: f7ca12e4acba83140b55c701d3e106c0, type: 2}
+  - {fileID: 2100000, guid: ea70923e0da55d24fb1bcb68707a5ac6, type: 2}
+  - {fileID: 2100000, guid: a58b4d271f607f349a91e9458c94f95b, type: 2}
 --- !u!4 &1462446546
 Transform:
   m_ObjectHideFlags: 0
@@ -536,3 +576,4 @@ SceneRoots:
   - {fileID: 993797066}
   - {fileID: 1133794195}
   - {fileID: 1462446546}
+  - {fileID: 441093497}

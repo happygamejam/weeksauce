@@ -4,50 +4,56 @@ using NUnit.Framework;
 using Rooms.RochesColorees;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 public class TuileGenerator : MonoBehaviour
 {
-    [SerializeField] private int _tailleX = 8;
-    [SerializeField] private int _tailleY = 8;
+    [SerializeField] private int tailleX = 8;
+    [SerializeField] private int tailleY = 8;
+    [SerializeField] private int minSteps = 4;
+    [SerializeField] private int maxSteps= 7;
     private char[,] _tuiles;
 
-    int[] currentPosition = { 0, 0 };
+    [SerializeField] private GameObject _tuileParent;
+    [SerializeField] private GameObject _tuilePrefab;
     
+    int[] currentPosition = { 0, 0 };
+    [SerializeField] private Material[] symboles;
 
     private int _previousIndex;
     private int _removedIndex = -1;
 
     private Step[] _case1 =
     {
-        new Step('\u2193',0, new []{1, 0}, 1),
-        new Step('\u2192',0,new []{0, 1}, 2),
-        new Step('\u2191',0, new []{-1, 0}, 3),
-        new Step('\u2190',0,new []{0, -1}, 2)
+        new Step(0,'\u2193',0, new []{1, 0}, 1),
+        new Step(0,'\u2192',0,new []{0, 1}, 2),
+        new Step(0,'\u2191',0, new []{-1, 0}, 3),
+        new Step(0,'\u2190',0,new []{0, -1}, 2)
     };
     
     private Step[] _case2 = 
     {
-        new Step('\u2192',1,new []{0, 1}, 3),
-        new Step('\u2191',1,new []{-1, 0}, 2),
-        new Step('\u2190',1,new []{0, -1}, 3),
-        new Step('\u2192',1,new []{0, 1}, 1)
+        new Step(1,'\u2192',1,new []{0, 1}, 3),
+        new Step(1,'\u2191',1,new []{-1, 0}, 2),
+        new Step(1,'\u2190',1,new []{0, -1}, 3),
+        new Step(1,'\u2192',1,new []{0, 1}, 1)
     };
     
     private Step[] _case3 = 
     {
-        new Step('\u2191',2,new []{-1, 0}, 3),
-        new Step('\u2191',2,new []{-1, 0}, 2),
-        new Step('\u2192',2,new []{0, 1}, 3),
-        new Step('\u2190',2,new []{0, -1}, 2)
+        new Step(2, '\u2191',2,new []{-1, 0}, 3),
+        new Step(2, '\u2191',2,new []{-1, 0}, 2),
+        new Step(2, '\u2192',2,new []{0, 1}, 3),
+        new Step(2, '\u2190',2,new []{0, -1}, 2)
     };
     
     private Step[] _case4 = 
     {
-        new Step('\u2192',3,new []{0, 1}, 1),
-        new Step('\u2190',3,new []{0, -1}, 1),
-        new Step('\u2193',3,new []{1, 0}, 1),
-        new Step('\u2191',3,new []{-1, 0}, 1),
+        new Step(3,'\u2192',3,new []{0, 1}, 1),
+        new Step(3,'\u2190',3,new []{0, -1}, 1),
+        new Step(3,'\u2193',3,new []{1, 0}, 1),
+        new Step(3,'\u2191',3,new []{-1, 0}, 1),
     };
 
     // private Step[] _case1 =
@@ -90,16 +96,19 @@ public class TuileGenerator : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        _tuiles = new char[_tailleX, _tailleY];
+        _tuiles = new char[tailleX, tailleY];
         _regle[0] = _case1;
         _regle[1] = _case2;
         _regle[2] = _case3;
         _regle[3] = _case4;
 
-        List<Step> stepsToGenerate;
-        int[] startingPosition;
-        while (true)
+        List<Step> stepsToGenerate = new List<Step>();
+        int[] startingPosition = new []{0, 0};
+        int maxRetry = 10;
+        
+        while (maxRetry > 0)
         {
+            maxRetry--;
             stepsToGenerate = new List<Step>();
             //Set empty tiles
             for (int i = 0; i < _tuiles.GetLength(0); i++)
@@ -123,7 +132,7 @@ public class TuileGenerator : MonoBehaviour
             while (currentPosition[0] > 0)
             {
                 currentStep++;
-                if (currentStep > 6 || !CalculateNewchemin(stepsToGenerate))
+                if (currentStep > maxSteps || !CalculateNewchemin(stepsToGenerate))
                 {
                     found = false;   
                     break;
@@ -131,7 +140,7 @@ public class TuileGenerator : MonoBehaviour
             }
 
             
-            if (currentStep >= 3 && found)
+            if (currentStep >= minSteps && found)
             {
                 startingPosition = startPosition;
                 _tuiles[startPosition[0], startPosition[1]] = 's';
@@ -140,8 +149,11 @@ public class TuileGenerator : MonoBehaviour
                 break;
             }
         }
-        
-        
+
+        if (maxRetry > 0)
+        {
+            InstanciateNewChemin(startingPosition, stepsToGenerate);
+        }
     }
 
     private Step? EvaluateCheminNoIntersect()
@@ -292,23 +304,52 @@ public class TuileGenerator : MonoBehaviour
 
     private void InstanciateNewChemin(int[] initialPosition, List<Step> steps)
     {
+        GameObject[,] tuilesInstance = new GameObject[tailleX, tailleY];
+
         int[] currentPosition = new[] { initialPosition[0], initialPosition[1] };
 
         for (int i = 0; i < _tuiles.GetLength(0); i++)
         {
             for (int j = 0; j < _tuiles.GetLength(1); j++)
             {
-                
+                GameObject tuileInstance = Instantiate(_tuilePrefab, new Vector3(i * 2, 0, j * 2), Quaternion.identity);
+                tuileInstance.transform.parent = _tuileParent.transform;
+                tuileInstance.GetComponent<PierreColoree>().Setup(this, -1);
+                tuilesInstance[i, j] = tuileInstance;
+
             }
         }
-        
-        for (int i = 0; i < steps.Count; i++)
+
+        tuilesInstance[currentPosition[0], currentPosition[1]].GetComponent<PierreColoree>().AddValidLevel(0);
+
+        int currentLevel = 0;
+        foreach (Step currentStep in steps)
         {
+            tuilesInstance[currentPosition[0], currentPosition[1]].GetComponent<PierreColoree>().Setup(this, currentLevel);
+            tuilesInstance[currentPosition[0], currentPosition[1]].transform.GetChild(0).GetComponent<MeshRenderer>().SetMaterials(new List<Material>(){symboles[currentStep.Id]});
+            for (int j = 0; j < currentStep.NbSteps; j++)
+            {
+                currentPosition[0] += currentStep.StepDirection[0];
+                currentPosition[1] += currentStep.StepDirection[1];
+
+                try
+                {
+                    tuilesInstance[currentPosition[0], currentPosition[1]].GetComponent<PierreColoree>().AddValidLevel(currentLevel);
+                }
+                catch (Exception e)
+                {
+                    break;
+                }
+            }
+
             
+            currentLevel++;
+            // tuileInstance.GetComponent<PierreColoree>().Setup();
+
         }
     }
 
-
+    
     private static void Print2DArray<T>(T[,] matrix)
     {
         string test = "";
