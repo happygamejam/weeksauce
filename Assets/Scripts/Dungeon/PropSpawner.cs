@@ -40,7 +40,7 @@ public class PropSpawner : MonoBehaviour
             random = new System.Random(parameters.seed);
         }
 
-        int index = (int)Math.Round(random.NextDouble() * props.Count) - 1;
+        int index = (int)Math.Round(random.NextDouble() * (props.Count - 1));
         Debug.Log("Spawning prop: " + index);
         GameObject prop = props[index];
 

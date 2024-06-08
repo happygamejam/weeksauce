@@ -9,20 +9,17 @@ public class HUD : MonoBehaviour
     {
         var uiDocument = GetComponent<UIDocument>();
     
-        Debug.Log("Initializing HUD");
-
         timer = new TimerController();
         timer.Initialize(uiDocument.rootVisualElement);
         timer.OnTimerEnd += OnTimerEnd;
         
-        timer.Start(30000 / 4);
+        timer.Start(30000);
         
     }
 
     void Update()
     {
         timer.Tick(Time.deltaTime * 1000);
-        Debug.Log("Active Dungeon: " + DungeonManager.ActiveDungeon);
     }
 
     private void OnTimerEnd() {

@@ -43,8 +43,7 @@ public class DungeonManager : MonoBehaviour
             return;
         }
 
-        instance.activeDungeon = dungeon;
-        SceneManager.LoadScene("Dungeon");
+        StartDungeon(dungeon);
     }
 
     public static void Quit() {
