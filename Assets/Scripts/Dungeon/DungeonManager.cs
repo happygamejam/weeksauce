@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -8,6 +9,8 @@ public class DungeonManager : MonoBehaviour
     private DungeonParameters activeDungeon;
     private DungeonParameters previousDungeon;
     public static DungeonParameters ActiveDungeon => instance.activeDungeon;
+
+    public event Action<GameObject> OnRoomChanged;
 
     private void Awake()
     {

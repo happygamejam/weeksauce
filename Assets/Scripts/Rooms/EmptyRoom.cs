@@ -2,8 +2,6 @@ using UnityEngine;
 
 public class EmptyRoom : Room
 {
-    public EmptyRoom(): base(25) { }
-
     public override GameObject Generate(DungeonParameters parameters)
     {
         Debug.Log("Generating an empty room");
