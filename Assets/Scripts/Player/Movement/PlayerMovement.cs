@@ -72,8 +72,6 @@ public class PlayerMovement : MonoBehaviour
         }
         Vector3 rightDirection = Vector3.Cross(projection, up).normalized;
         Vector3 theFinalFinalMovement = projection * inputDirection.z + -rightDirection * inputDirection.x;
-        Debug.Log("Projection: " + projection);
-        Debug.Log("Right: " + rightDirection);
 
         if (debugRays)
         {
