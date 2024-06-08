@@ -472,7 +472,9 @@ MonoBehaviour:
   dungeonParameters: {fileID: 11400000, guid: ad408d099b5da46c8be72b4f7ec74246, type: 2}
   rooms:
   - room: {fileID: 5771815153832966136, guid: 6fae223d5ea92f2b78b17cf89960ea74, type: 3}
-    Weight: 1
+    Weight: 0.5
+  - room: {fileID: 0}
+    Weight: 0.5
 --- !u!4 &1049580756
 Transform:
   m_ObjectHideFlags: 0
