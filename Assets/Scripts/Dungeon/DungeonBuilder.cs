@@ -22,13 +22,18 @@ public class DungeonBuilder : MonoBehaviour
     private void Generate(DungeonParameters parameters)
     {
         var weightedRooms = new WeightedList<WeightedRoom>(rooms, parameters.seed);
-        float cumulativeOffset = 0;
+        Vector3 cumulativeOffset = Vector3.zero;
         for (int i = 0; i < parameters.roomCount; i++)
         {
             WeightedRoom result = weightedRooms.Pick();
             GameObject room = result.room.Generate(parameters);
-            room.transform.position = new Vector3(cumulativeOffset, 0, 0);
-            cumulativeOffset += result.room.Offset;
+            Vector3 origin = room.transform.Find("Points/StartPoint").position;
+            room.transform.position = cumulativeOffset;
+            Debug.Log("Placing room at " + room.transform.position);
+
+            Vector3 attach = room.transform.Find("Points/EndPoint").position;
+            cumulativeOffset = attach - origin;
+            Debug.Log("Next offset is " + cumulativeOffset);
         }
     }
 }
