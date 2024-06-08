@@ -2,18 +2,18 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PierreColoree : MonoBehaviour
+public class LabyrinthTile : MonoBehaviour
 {
-    private TuileGenerator _master;
+    private TileGenerator _master;
     private int _level = 0;
 
     private List<int> _validLevels = new List<int>();
     private int _checkpointLevel = -1;
     
-    public void Setup(TuileGenerator newMaster, int newCheckpointLevel)
+    public void Setup(TileGenerator newMaster, int newCheckpointLevel)
     {
         _master = newMaster;
-        newMaster.UpdateRocheEvent += UpdateLevel;
+        newMaster.UpdateTileEvent += UpdateLevel;
         _checkpointLevel = newCheckpointLevel;
     }
 
@@ -31,16 +31,23 @@ public class PierreColoree : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!_validLevels.Contains(_level))
+        Debug.Log(_level);
+        foreach( var x in _validLevels) {
+            Debug.Log( x.ToString());
+        }
+
+       
+        if ( !_validLevels.Contains(_level))
         {
-            Destroy(this);
+            Debug.Log("entered");
+            Destroy(gameObject);
             return;
             //TODO : KILL
         }
 
         if (_level == _checkpointLevel)
         {
-            _master.UpdateRocheLevel(_checkpointLevel + 1);
+            _master.UpdateTileLevel(_checkpointLevel + 1);
         }
     }
 }

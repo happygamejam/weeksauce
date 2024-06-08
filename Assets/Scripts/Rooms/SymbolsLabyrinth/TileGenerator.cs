@@ -7,24 +7,25 @@ using UnityEngine;
 using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
-public class TuileGenerator : MonoBehaviour
+public class TileGenerator : MonoBehaviour
 {
-    [SerializeField] private int tailleX = 8;
-    [SerializeField] private int tailleY = 8;
-    [SerializeField] private int minSteps = 4;
-    [SerializeField] private int maxSteps= 7;
-    private char[,] _tuiles;
+    [SerializeField] private int sizeX = 8;
+    [SerializeField] private int sizeY = 8;
+    [SerializeField] private int minSteps = 5;
+    [SerializeField] private int maxSteps= 8;
+    private char[,] _tiles;
 
-    [SerializeField] private GameObject _tuileParent;
-    [SerializeField] private GameObject _tuilePrefab;
+    [SerializeField] private GameObject _tileParent;
+    [SerializeField] private GameObject _tilePrefab;
     
-    int[] currentPosition = { 0, 0 };
-    [SerializeField] private Material[] symboles;
+    int[] _currentPosition = { 0, 0 };
+    [SerializeField] private Material[] symbols;
 
     private int _previousIndex;
     private int _removedIndex = -1;
 
-    private Step[] _case1 =
+    
+    private Step[] _tile1 =
     {
         new Step(0,'\u2193',0, new []{1, 0}, 1),
         new Step(0,'\u2192',0,new []{0, 1}, 2),
@@ -32,7 +33,7 @@ public class TuileGenerator : MonoBehaviour
         new Step(0,'\u2190',0,new []{0, -1}, 2)
     };
     
-    private Step[] _case2 = 
+    private Step[] _tile2 = 
     {
         new Step(1,'\u2192',1,new []{0, 1}, 3),
         new Step(1,'\u2191',1,new []{-1, 0}, 2),
@@ -40,7 +41,7 @@ public class TuileGenerator : MonoBehaviour
         new Step(1,'\u2192',1,new []{0, 1}, 1)
     };
     
-    private Step[] _case3 = 
+    private Step[] _tile3 = 
     {
         new Step(2, '\u2191',2,new []{-1, 0}, 3),
         new Step(2, '\u2191',2,new []{-1, 0}, 2),
@@ -48,7 +49,7 @@ public class TuileGenerator : MonoBehaviour
         new Step(2, '\u2190',2,new []{0, -1}, 2)
     };
     
-    private Step[] _case4 = 
+    private Step[] _tile4 = 
     {
         new Step(3,'\u2192',3,new []{0, 1}, 1),
         new Step(3,'\u2190',3,new []{0, -1}, 1),
@@ -56,7 +57,7 @@ public class TuileGenerator : MonoBehaviour
         new Step(3,'\u2191',3,new []{-1, 0}, 1),
     };
 
-    // private Step[] _case1 =
+    // private Step[] _tile1 =
     // {
     //     new Step('1',0, new []{1, 0}, 1),
     //     new Step('1',0,new []{0, 1}, 2),
@@ -64,7 +65,7 @@ public class TuileGenerator : MonoBehaviour
     //     new Step('1',0,new []{0, -1}, 2)
     // };
     //
-    // private Step[] _case2 = 
+    // private Step[] _tile2 = 
     // {
     //     new Step('2',1,new []{0, 1}, 2),
     //     new Step('2',1,new []{0, -1}, 3),
@@ -72,7 +73,7 @@ public class TuileGenerator : MonoBehaviour
     //     new Step('2',1,new []{0, 1}, 1)
     // };
     //
-    // private Step[] _case3 = 
+    // private Step[] _tile3 = 
     // {
     //     new Step('3',2,new []{-1, 0}, 1),
     //     new Step('3',2,new []{-1, 0}, 2),
@@ -80,7 +81,7 @@ public class TuileGenerator : MonoBehaviour
     //     new Step('3',2,new []{0, -1}, 2)
     // };
     //
-    // private Step[] _case4 = 
+    // private Step[] _tile4 = 
     // {
     //     new Step('4',3,new []{0, 1}, 1),
     //     new Step('4',3,new []{0, -1}, 1),
@@ -88,7 +89,7 @@ public class TuileGenerator : MonoBehaviour
     //     new Step('4',3,new []{-1, 0}, 1),
     // };
     
-    private Step[][] _regle = new Step[4][];
+    private Step[][] _rule = new Step[4][];
    
     
 
@@ -96,11 +97,11 @@ public class TuileGenerator : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        _tuiles = new char[tailleX, tailleY];
-        _regle[0] = _case1;
-        _regle[1] = _case2;
-        _regle[2] = _case3;
-        _regle[3] = _case4;
+        _tiles = new char[sizeX, sizeY];
+        _rule[0] = _tile1;
+        _rule[1] = _tile2;
+        _rule[2] = _tile3;
+        _rule[3] = _tile4;
 
         List<Step> stepsToGenerate = new List<Step>();
         int[] startingPosition = new []{0, 0};
@@ -111,28 +112,28 @@ public class TuileGenerator : MonoBehaviour
             maxRetry--;
             stepsToGenerate = new List<Step>();
             //Set empty tiles
-            for (int i = 0; i < _tuiles.GetLength(0); i++)
+            for (int i = 0; i < _tiles.GetLength(0); i++)
             {
-                for(int j = 0; j < _tuiles.GetLength(1); j++)
+                for(int j = 0; j < _tiles.GetLength(1); j++)
                 {
-                    _tuiles[i, j] = ' ';
+                    _tiles[i, j] = '*';
                 }
             }
 
         
-            currentPosition[0] = _tuiles.GetLength(0) - 1;
-            currentPosition[1] = Random.Range(0, _tuiles.GetLength(1));
-            int[] startPosition = currentPosition; 
+            _currentPosition[0] = _tiles.GetLength(0) - 1;
+            _currentPosition[1] = Random.Range(0, _tiles.GetLength(1));
+            int[] startPosition = _currentPosition; 
         
 
             //Déterminer ici premier icone précédent
             _previousIndex = Random.Range(0,4);
             bool found = true;
             int currentStep = 0;
-            while (currentPosition[0] > 0)
+            while (_currentPosition[0] > 0)
             {
                 currentStep++;
-                if (currentStep > maxSteps || !CalculateNewchemin(stepsToGenerate))
+                if (currentStep > maxSteps || !CalculateNewPath(stepsToGenerate))
                 {
                     found = false;   
                     break;
@@ -143,20 +144,20 @@ public class TuileGenerator : MonoBehaviour
             if (currentStep >= minSteps && found)
             {
                 startingPosition = startPosition;
-                _tuiles[startPosition[0], startPosition[1]] = 's';
-                _tuiles[currentPosition[0], currentPosition[1]] = 'F';
-                Print2DArray(_tuiles);
+                _tiles[startPosition[0], startPosition[1]] = 's';
+                _tiles[_currentPosition[0], _currentPosition[1]] = 'F';
+                Print2DArray(_tiles);
                 break;
             }
         }
 
         if (maxRetry > 0)
         {
-            InstanciateNewChemin(startingPosition, stepsToGenerate);
+            InstanciateNewPath(startingPosition, stepsToGenerate);
         }
     }
 
-    private Step? EvaluateCheminNoIntersect()
+    private Step? EvaluatePathNoIntersect()
     {
         List<int> options = new List<int> {0, 1, 2, 3};
 
@@ -172,18 +173,18 @@ public class TuileGenerator : MonoBehaviour
             {
                 return null;
             }
-            int currentCase = options[Random.Range(0, options.Count)];
-            Step currentStep = _regle[currentCase][_previousIndex];
+            int currentTile = options[Random.Range(0, options.Count)];
+            Step currentStep = _rule[currentTile][_previousIndex];
 
             int[] futurePosition =
             {
-                currentPosition[0],
-                currentPosition[1]
+                _currentPosition[0],
+                _currentPosition[1]
             };
 
             try
             {
-                bool trouve = true;
+                bool found = true;
                 for (int i = 0; i < currentStep.NbSteps; i++)
                 {
                     futurePosition = new[]
@@ -191,16 +192,16 @@ public class TuileGenerator : MonoBehaviour
                         futurePosition[0] + currentStep.StepDirection[0], futurePosition[1] + currentStep.StepDirection[1]
                     };
                     
-                    if (futurePosition[0] >= 0 && _tuiles[futurePosition[0], futurePosition[1]] != ' ')
+                    if (futurePosition[0] >= 0 && _tiles[futurePosition[0], futurePosition[1]] != '*')
                                                // && tuiles[futurePosition[0], futurePosition[1]] != '-'
                                                // && tuiles[futurePosition[0], futurePosition[1]] != '|')
                     {
-                        trouve = false;
+                        found = false;
                         break;
                     }
                 }
 
-                if (trouve)
+                if (found)
                 {
                     return currentStep;
                 }
@@ -209,11 +210,11 @@ public class TuileGenerator : MonoBehaviour
             {
                 print("oops");
             }
-            options.Remove(currentCase);
+            options.Remove(currentTile);
         }
     }
     
-    private Step? EvaluateChemin()
+    private Step? EvaluatePath()
     {
         List<int> options = new List<int> {0, 1, 2, 3};
         if (_removedIndex != -1)
@@ -229,18 +230,18 @@ public class TuileGenerator : MonoBehaviour
                 return null;
             }
             
-            int currentCase = options[Random.Range(0, options.Count)];
-            Step currentStep = _regle[currentCase][_previousIndex];
+            int currentTile = options[Random.Range(0, options.Count)];
+            Step currentStep = _rule[currentTile][_previousIndex];
             int[] futurePosition =
             {
-                currentPosition[0] + currentStep.StepDirection[0] * currentStep.NbSteps,
-                currentPosition[1] + currentStep.StepDirection[1] * currentStep.NbSteps
+                _currentPosition[0] + currentStep.StepDirection[0] * currentStep.NbSteps,
+                _currentPosition[1] + currentStep.StepDirection[1] * currentStep.NbSteps
             };
 
 
             try
             {
-                if (futurePosition[0] < 0 || _tuiles[futurePosition[0], futurePosition[1]] == ' ')
+                if (futurePosition[0] < 0 || _tiles[futurePosition[0], futurePosition[1]] == '*')
                                           // || tuiles[futurePosition[0], futurePosition[1]] == '-'
                                           // || tuiles[futurePosition[0], futurePosition[1]] == '|')
                 {
@@ -251,82 +252,84 @@ public class TuileGenerator : MonoBehaviour
             {
                 print("oops");
             }
-            options.Remove(currentCase);
+            options.Remove(currentTile);
         }
     }
     
-    private bool CalculateNewchemin(List<Step> stepsToGenerate)
+    private bool CalculateNewPath(List<Step> stepsToGenerate)
     {
-        Step? checkStep = EvaluateChemin();
+        Step? checkStep = EvaluatePath();
 
         if (checkStep == null)
         {
             return false;
         }
 
-        Step stepTrouve = (Step)checkStep;
-        stepsToGenerate.Add(stepTrouve);
+        Step stepFound = (Step)checkStep;
+        stepsToGenerate.Add(stepFound);
         
-        if (_previousIndex == stepTrouve.Case)
+        if (_previousIndex == stepFound.Tile)
         {
-            _removedIndex = stepTrouve.Case;
+            _removedIndex = stepFound.Tile;
         }
         
-        _previousIndex = stepTrouve.Case;
+        _previousIndex = stepFound.Tile;
         
-        _tuiles[currentPosition[0], currentPosition[1]] = stepTrouve.Symbole;
-        for (int i = 0; i < stepTrouve.NbSteps; i++)
+        _tiles[_currentPosition[0], _currentPosition[1]] = stepFound.Symbol;
+        for (int i = 0; i < stepFound.NbSteps; i++)
         {
-            currentPosition = new[]
-                { currentPosition[0] + stepTrouve.StepDirection[0], currentPosition[1] + stepTrouve.StepDirection[1] };
-            if (currentPosition[0] == 0)
+            _currentPosition = new[]
+                { _currentPosition[0] + stepFound.StepDirection[0], _currentPosition[1] + stepFound.StepDirection[1] };
+            if (_currentPosition[0] == 0)
             {
                 return true;
             }
 
-            if (_tuiles[currentPosition[0], currentPosition[1]] != ' ')
+            if (_tiles[_currentPosition[0], _currentPosition[1]] != '*')
             {
                 continue;
             }
             
-            if (stepTrouve.StepDirection[0] == 0)
+            if (stepFound.StepDirection[0] == 0)
             {
-                _tuiles[currentPosition[0], currentPosition[1]] = '—';
+                _tiles[_currentPosition[0], _currentPosition[1]] = '—';
             }
             else
             {
-                _tuiles[currentPosition[0], currentPosition[1]] = '|';
+                _tiles[_currentPosition[0], _currentPosition[1]] = '|';
             }
         }
         
         return true;
     }
 
-    private void InstanciateNewChemin(int[] initialPosition, List<Step> steps)
+    private void InstanciateNewPath(int[] initialPosition, List<Step> steps)
     {
-        GameObject[,] tuilesInstance = new GameObject[tailleX, tailleY];
+        GameObject[,] tileInstances = new GameObject[sizeX, sizeY];
 
         int[] currentPosition = new[] { initialPosition[0], initialPosition[1] };
 
-        for (int i = 0; i < _tuiles.GetLength(0); i++)
+        for (int i = 0; i < _tiles.GetLength(0); i++)
         {
-            for (int j = 0; j < _tuiles.GetLength(1); j++)
+            for (int j = 0; j < _tiles.GetLength(1); j++)
             {
-                GameObject tuileInstance = Instantiate(_tuilePrefab, new Vector3(i * 2, 0, j * 2), Quaternion.identity);
-                tuileInstance.transform.parent = _tuileParent.transform;
-                tuileInstance.GetComponent<PierreColoree>().Setup(this, -1);
-                tuilesInstance[i, j] = tuileInstance;
-
+                GameObject tileInstance = Instantiate(_tilePrefab, new Vector3(i * 4, 0, j * 4), Quaternion.identity);
+                tileInstance.transform.parent = _tileParent.transform;
+                tileInstance.GetComponent<LabyrinthTile>().Setup(this, -1);
+                tileInstance.transform.GetChild(0).GetComponent<MeshRenderer>().SetMaterials(new List<Material>(){symbols[Random.Range(0, 4)]});
+                tileInstances[i, j] = tileInstance;
+    
             }
         }
 
-        tuilesInstance[currentPosition[0], currentPosition[1]].GetComponent<PierreColoree>().AddValidLevel(0);
+        tileInstances[currentPosition[0], currentPosition[1]].GetComponent<LabyrinthTile>().AddValidLevel(0);
 
         int currentLevel = 0;
         foreach (Step currentStep in steps)
         {
-            tuilesInstance[currentPosition[0], currentPosition[1]].GetComponent<PierreColoree>().Setup(this, currentLevel);
-            tuilesInstance[currentPosition[0], currentPosition[1]].transform.GetChild(0).GetComponent<MeshRenderer>().SetMaterials(new List<Material>(){symboles[currentStep.Id]});
+            tileInstances[currentPosition[0], currentPosition[1]].GetComponent<LabyrinthTile>().Setup(this, currentLevel);
+            tileInstances[currentPosition[0], currentPosition[1]].transform.GetChild(0).GetComponent<MeshRenderer>().SetMaterials(new List<Material>(){symbols[currentStep.Id]});
+            currentLevel++;
             for (int j = 0; j < currentStep.NbSteps; j++)
             {
                 currentPosition[0] += currentStep.StepDirection[0];
@@ -334,18 +337,14 @@ public class TuileGenerator : MonoBehaviour
 
                 try
                 {
-                    tuilesInstance[currentPosition[0], currentPosition[1]].GetComponent<PierreColoree>().AddValidLevel(currentLevel);
+                    tileInstances[currentPosition[0], currentPosition[1]].GetComponent<LabyrinthTile>().AddValidLevel(currentLevel);
                 }
                 catch (Exception e)
                 {
                     break;
                 }
             }
-
             
-            currentLevel++;
-            // tuileInstance.GetComponent<PierreColoree>().Setup();
-
         }
     }
 
@@ -365,12 +364,11 @@ public class TuileGenerator : MonoBehaviour
         Debug.Log(test);
     }
 
-    public delegate void UpdateRocheLevelDelegate(int newLevel);
+    public delegate void UpdateTileLevelDelegate(int newLevel);
 
-    public event UpdateRocheLevelDelegate UpdateRocheEvent;
-    public void UpdateRocheLevel(int newLevel)
+    public event UpdateTileLevelDelegate UpdateTileEvent;
+    public void UpdateTileLevel(int newLevel)
     {
-        UpdateRocheEvent(newLevel);
+        UpdateTileEvent(newLevel);
     }
-
 }
