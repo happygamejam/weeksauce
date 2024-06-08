@@ -2,20 +2,22 @@ using System;
 using System.Collections.Generic;
 using NUnit.Framework;
 using Rooms.RochesColorees;
+using Unity.VisualScripting;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class TuileGenerator : MonoBehaviour
 {
-
-    char[,] tuiles = new char[10, 8];
+    [SerializeField] private int _tailleX = 8;
+    [SerializeField] private int _tailleY = 8;
+    private char[,] _tuiles;
 
     int[] currentPosition = { 0, 0 };
     
 
     private int _previousIndex;
     private int _removedIndex = -1;
- 
+
     private Step[] _case1 =
     {
         new Step('\u2193',0, new []{1, 0}, 1),
@@ -88,42 +90,57 @@ public class TuileGenerator : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        _tuiles = new char[_tailleX, _tailleY];
         _regle[0] = _case1;
         _regle[1] = _case2;
         _regle[2] = _case3;
         _regle[3] = _case4;
-       
-        
-        //Set empty tiles
-        for (int i = 0; i < tuiles.GetLength(0); i++)
+
+        List<Step> stepsToGenerate;
+        int[] startingPosition;
+        while (true)
         {
-            for(int j = 0; j < tuiles.GetLength(1); j++)
+            stepsToGenerate = new List<Step>();
+            //Set empty tiles
+            for (int i = 0; i < _tuiles.GetLength(0); i++)
             {
-                tuiles[i, j] = ' ';
+                for(int j = 0; j < _tuiles.GetLength(1); j++)
+                {
+                    _tuiles[i, j] = ' ';
+                }
             }
-        }
 
         
-        currentPosition[0] = tuiles.GetLength(0) - 1;
-        currentPosition[1] = Random.Range(0, tuiles.GetLength(1));
-        int[] startPosition = currentPosition; 
+            currentPosition[0] = _tuiles.GetLength(0) - 1;
+            currentPosition[1] = Random.Range(0, _tuiles.GetLength(1));
+            int[] startPosition = currentPosition; 
         
 
-        //Déterminer ici premier icone précédent
-        _previousIndex = Random.Range(0,4);
-        
-        while (currentPosition[0] > 0)
-        {
-            Print2DArray(tuiles);
-            if (!CalculateNewchemin())
+            //Déterminer ici premier icone précédent
+            _previousIndex = Random.Range(0,4);
+            bool found = true;
+            int currentStep = 0;
+            while (currentPosition[0] > 0)
             {
-               break;
+                currentStep++;
+                if (currentStep > 6 || !CalculateNewchemin(stepsToGenerate))
+                {
+                    found = false;   
+                    break;
+                }
             }
+
             
+            if (currentStep >= 3 && found)
+            {
+                startingPosition = startPosition;
+                _tuiles[startPosition[0], startPosition[1]] = 's';
+                _tuiles[currentPosition[0], currentPosition[1]] = 'F';
+                Print2DArray(_tuiles);
+                break;
+            }
         }
-        tuiles[startPosition[0], startPosition[1]] = 's';
-        tuiles[currentPosition[0], currentPosition[1]] = 'F';
-        Print2DArray(tuiles);
+        
         
     }
 
@@ -162,7 +179,7 @@ public class TuileGenerator : MonoBehaviour
                         futurePosition[0] + currentStep.StepDirection[0], futurePosition[1] + currentStep.StepDirection[1]
                     };
                     
-                    if (futurePosition[0] >= 0 && tuiles[futurePosition[0], futurePosition[1]] != ' ')
+                    if (futurePosition[0] >= 0 && _tuiles[futurePosition[0], futurePosition[1]] != ' ')
                                                // && tuiles[futurePosition[0], futurePosition[1]] != '-'
                                                // && tuiles[futurePosition[0], futurePosition[1]] != '|')
                     {
@@ -211,7 +228,7 @@ public class TuileGenerator : MonoBehaviour
 
             try
             {
-                if (futurePosition[0] < 0 || tuiles[futurePosition[0], futurePosition[1]] == ' ')
+                if (futurePosition[0] < 0 || _tuiles[futurePosition[0], futurePosition[1]] == ' ')
                                           // || tuiles[futurePosition[0], futurePosition[1]] == '-'
                                           // || tuiles[futurePosition[0], futurePosition[1]] == '|')
                 {
@@ -226,7 +243,7 @@ public class TuileGenerator : MonoBehaviour
         }
     }
     
-    private bool CalculateNewchemin()
+    private bool CalculateNewchemin(List<Step> stepsToGenerate)
     {
         Step? checkStep = EvaluateChemin();
 
@@ -236,7 +253,8 @@ public class TuileGenerator : MonoBehaviour
         }
 
         Step stepTrouve = (Step)checkStep;
-
+        stepsToGenerate.Add(stepTrouve);
+        
         if (_previousIndex == stepTrouve.Case)
         {
             _removedIndex = stepTrouve.Case;
@@ -244,7 +262,7 @@ public class TuileGenerator : MonoBehaviour
         
         _previousIndex = stepTrouve.Case;
         
-        tuiles[currentPosition[0], currentPosition[1]] = stepTrouve.Symbole;
+        _tuiles[currentPosition[0], currentPosition[1]] = stepTrouve.Symbole;
         for (int i = 0; i < stepTrouve.NbSteps; i++)
         {
             currentPosition = new[]
@@ -254,49 +272,40 @@ public class TuileGenerator : MonoBehaviour
                 return true;
             }
 
+            if (_tuiles[currentPosition[0], currentPosition[1]] != ' ')
+            {
+                continue;
+            }
+            
             if (stepTrouve.StepDirection[0] == 0)
             {
-                // tuiles[currentPosition[0], currentPosition[1]] = '—';
+                _tuiles[currentPosition[0], currentPosition[1]] = '—';
             }
             else
             {
-                // tuiles[currentPosition[0], currentPosition[1]] = '|';
+                _tuiles[currentPosition[0], currentPosition[1]] = '|';
             }
         }
         
-        
-        // int deplacementY = Random.Range(-4 + bias, 4 + bias);
-        // bias -= Sign(deplacementY);
-        // while (deplacementY != 0)
-        // {
-        //     currentPosition[1] += Sign(deplacementY);
-        //     if (currentPosition[1] < 0)
-        //     {
-        //         currentPosition[1] = 0;
-        //         break;
-        //     }
-        //     if (currentPosition[1] >= tuiles.GetLength(1)) {
-        //         currentPosition[1] = tuiles.GetLength(1) - 1;
-        //     }
-        //     tuiles[currentPosition[0], currentPosition[1]] = '�';
-        //     deplacementY -= Sign(deplacementY);
-        // }
-        // tuiles[currentPosition[0], currentPosition[1]] = '+';
-        //
-        //
-        // int deplacementX = Random.Range(1, 4);
-        //
-        // while (deplacementX > 0) {
-        //     currentPosition[0] -= 1;
-        //     if (currentPosition[0] < 0) {
-        //         currentPosition[0] = 0;
-        //         break;
-        //     }
-        //     tuiles[currentPosition[0], currentPosition[1]] = '|';
-        //     deplacementX--;
-        // }
-        // tuiles[currentPosition[0], currentPosition[1]] = '+';
         return true;
+    }
+
+    private void InstanciateNewChemin(int[] initialPosition, List<Step> steps)
+    {
+        int[] currentPosition = new[] { initialPosition[0], initialPosition[1] };
+
+        for (int i = 0; i < _tuiles.GetLength(0); i++)
+        {
+            for (int j = 0; j < _tuiles.GetLength(1); j++)
+            {
+                
+            }
+        }
+        
+        for (int i = 0; i < steps.Count; i++)
+        {
+            
+        }
     }
 
 
@@ -315,6 +324,12 @@ public class TuileGenerator : MonoBehaviour
         Debug.Log(test);
     }
 
-   
+    public delegate void UpdateRocheLevelDelegate(int newLevel);
+
+    public event UpdateRocheLevelDelegate UpdateRocheEvent;
+    public void UpdateRocheLevel(int newLevel)
+    {
+        UpdateRocheEvent(newLevel);
+    }
 
 }
