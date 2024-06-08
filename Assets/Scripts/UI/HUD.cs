@@ -13,7 +13,7 @@ public class HUD : MonoBehaviour
         timer.Initialize(uiDocument.rootVisualElement);
         timer.OnTimerEnd += OnTimerEnd;
         
-        timer.Start(30000);
+        timer.Start(300000);
         
     }
 

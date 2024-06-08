@@ -8,6 +8,10 @@ public class DungeonBuilder : MonoBehaviour
     private DungeonParameters dungeonParameters;
     [SerializeField]
     private List<WeightedRoom> rooms;
+    [SerializeField]
+    private PlayerSpawner playerSpawner;
+
+    private List<GameObject> roomInstances = new List<GameObject>();
 
     private void OnEnable() {
         var dungeonParameters = DungeonManager.ActiveDungeon;
@@ -17,6 +21,9 @@ public class DungeonBuilder : MonoBehaviour
 
         Debug.Assert(dungeonParameters != null, "DungeonParameters is not set in DungeonBuilder");
         Generate(dungeonParameters);
+
+        Debug.Assert(playerSpawner != null, "PlayerSpawner is not set in DungeonBuilder");
+        playerSpawner.SpawnPlayer(roomInstances[0]);
     }
 
     private void Generate(DungeonParameters parameters)
@@ -34,6 +41,8 @@ public class DungeonBuilder : MonoBehaviour
             Vector3 attach = room.transform.Find("Points/EndPoint").position;
             cumulativeOffset = attach - origin;
             Debug.Log("Next offset is " + cumulativeOffset);
+
+            roomInstances.Add(room);
         }
     }
 }

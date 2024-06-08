@@ -475,6 +475,7 @@ MonoBehaviour:
     Weight: 0.5
   - room: {fileID: -8815402921376216592, guid: 3e8d19a933f702153a5971c9b3e0ff02, type: 3}
     Weight: 1
+  playerSpawner: {fileID: 2068132229}
 --- !u!4 &1049580756
 Transform:
   m_ObjectHideFlags: 0
