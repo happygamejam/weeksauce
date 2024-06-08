@@ -100,4 +100,8 @@ public class PlayerMovement : MonoBehaviour
     {
         isJumping = jumpState;
     }
+
+    private void FaceDirection(Vector2 direction) {
+
+    }
 }
