@@ -9,8 +9,14 @@ public class PropSpawner : MonoBehaviour
     [SerializeField]
     private List<Transform> spawnPoints;
 
+    private int _propVariationValue;
     private System.Random random;
 
+    public int GetPropVariationValue()
+    {
+        return _propVariationValue;
+    }
+    
     void Start()
     {
         if (props.Count == 0 || spawnPoints.Count == 0)
@@ -41,6 +47,7 @@ public class PropSpawner : MonoBehaviour
         }
 
         int index = (int)Math.Round(random.NextDouble() * (props.Count - 1));
+        _propVariationValue = index;
         Debug.Log("Spawning prop: " + index);
         GameObject prop = props[index];
 
