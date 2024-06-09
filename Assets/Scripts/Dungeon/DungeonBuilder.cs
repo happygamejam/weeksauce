@@ -11,7 +11,7 @@ public class DungeonBuilder : MonoBehaviour
     [SerializeField]
     private PlayerSpawner playerSpawner;
 
-    private List<GameObject> roomInstances = new List<GameObject>();
+    private List<Room> roomInstances = new List<Room>();
 
     private void OnEnable() {
         var dungeonParameters = DungeonManager.ActiveDungeon;
@@ -33,12 +33,15 @@ public class DungeonBuilder : MonoBehaviour
         for (int i = 0; i < parameters.roomCount; i++)
         {
             WeightedRoom result = weightedRooms.Pick();
-            GameObject room = result.room.Generate(parameters);
-            Vector3 origin = room.transform.Find("Points/StartPoint").position;
-            room.transform.position = cumulativeOffset;
-            Debug.Log("Placing room at " + room.transform.position);
+            var room = result.room;
+            room.SetPlayerSpawner(playerSpawner);
 
-            Vector3 attach = room.transform.Find("Points/EndPoint").position;
+            room.Generate(parameters);
+            Vector3 origin = room.GameObject.transform.Find("Points/StartPoint").position;
+            room.GameObject.transform.position = cumulativeOffset;
+            Debug.Log("Placing room at " + room.GameObject.transform.position);
+
+            Vector3 attach = room.GameObject.transform.Find("Points/EndPoint").position;
             cumulativeOffset = attach - origin;
             Debug.Log("Next offset is " + cumulativeOffset);
 
