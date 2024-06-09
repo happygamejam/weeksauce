@@ -13,12 +13,11 @@ public class PlayerMovement : MonoBehaviour
     Animator animator;
 
     [SerializeField] bool debugRays;
-    [SerializeField] private float playerSpeed = 2.0f;
+    [SerializeField] private float speedMultiplier = 1.0f;
     [SerializeField] private float airSpeed = 0.5f;
-    [SerializeField] private float acceleration = 2.0f;
-    [SerializeField] private float rotationSpeed = 2.0f;
+    [SerializeField] private float airAcceleration = 1.0f;
+    [SerializeField] private float rotationSpeed = 1.5f;
     [SerializeField] private float jumpHeight = 1.0f;
-    [SerializeField] private float jumpDelay = 1.02f;
     [SerializeField] private float gravityValue = -9.81f;
     [SerializeField] private Vector3 up = Vector3.up;
 
@@ -26,9 +25,11 @@ public class PlayerMovement : MonoBehaviour
     Vector3 playerVelocity;
     Vector3 currentVelocity;
     Vector3 lastDirection;
-    bool groundedPlayer;
-    bool isJumping;
-    private float jumpTimer = 0.0f;
+    Vector3 lastVelocity;
+    bool jump;
+    private bool isGrounded = false;
+    private bool isJumping = false;
+    private bool isFalling = false;
 
     private void Awake()
     {
@@ -43,7 +44,8 @@ public class PlayerMovement : MonoBehaviour
     {
         moveAction.performed += ctx => SetMoveValue(ctx.ReadValue<Vector2>());
         moveAction.canceled += ctx => SetMoveValue(ctx.ReadValue<Vector2>());
-        jumpAction.performed += ctx => Jump();
+        jumpAction.performed += ctx => Jump(true);
+        jumpAction.canceled += ctx => Jump(false);
     }
 
     private void OnDisable() => Unsubscribe();
@@ -54,10 +56,10 @@ public class PlayerMovement : MonoBehaviour
     {
         moveAction.performed -= ctx => SetMoveValue(ctx.ReadValue<Vector2>());
         moveAction.canceled -= ctx => SetMoveValue(ctx.ReadValue<Vector2>());
-        jumpAction.performed -= ctx => Jump();
+        jumpAction.performed -= ctx => Jump(true);
+        jumpAction.canceled -= ctx => Jump(false);
 
     }
-
 
     private void FixedUpdate()
     {
@@ -69,6 +71,7 @@ public class PlayerMovement : MonoBehaviour
         UpdateJump();
 
         Vector3 inputDirection = new Vector3(moveDirection.x, 0.0f, moveDirection.y).normalized;
+        float inputMagnitude = Mathf.Clamp01(moveDirection.magnitude);
         // The projection of the camera's forward vector on the floor plane
         // gives a vector that is parallel to the floor no matter the rotation of the camera.
         Vector3 projection = Vector3.ProjectOnPlane(roomCamera.transform.forward, up).normalized;
@@ -79,65 +82,77 @@ public class PlayerMovement : MonoBehaviour
             projection = roomCamera.transform.up;
         }
         Vector3 rightDirection = Vector3.Cross(projection, up).normalized;
-        Vector3 theFinalFinalMovement = projection * inputDirection.z + -rightDirection * inputDirection.x;
-
-        float speed = controller.isGrounded ? playerSpeed : airSpeed;
-        currentVelocity = Vector3.Lerp(currentVelocity, theFinalFinalMovement * speed, acceleration * Time.deltaTime);
+        Vector3 movementDirection = projection * inputDirection.z + -rightDirection * inputDirection.x;
 
         if (debugRays)
         {
             Debug.DrawRay(controller.gameObject.transform.position, projection, Color.yellow);
             Debug.DrawRay(controller.gameObject.transform.position, rightDirection, Color.blue);
-            Debug.DrawRay(controller.gameObject.transform.position, theFinalFinalMovement, Color.red);
+            Debug.DrawRay(controller.gameObject.transform.position, movementDirection, Color.red);
         }
 
-        if (theFinalFinalMovement != Vector3.zero)
+        if (movementDirection != Vector3.zero)
         {
-            Quaternion targetRotation = Quaternion.LookRotation(projection * inputDirection.x + rightDirection * inputDirection.z, up);
+            Quaternion targetRotation = Quaternion.LookRotation(movementDirection, up);
             // Smoothly interpolate between the current rotation and the target rotation
             gameObject.transform.rotation = Quaternion.Slerp(gameObject.transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
         }
 
+        animator.SetFloat("SpeedMultiplier", speedMultiplier);
+        animator.SetFloat("Speed", inputMagnitude, 0.05f, Time.deltaTime);
 
-        controller.Move(currentVelocity * Time.deltaTime);
-        if (controller.isGrounded)
-        {
-            animator.SetFloat("Speed", currentVelocity.magnitude / playerSpeed);
+        if (!isGrounded) {
+            Vector3 velocity = movementDirection * airSpeed * inputMagnitude;
+            /* Vector3 velocity = Vector3.Lerp(lastVelocity, movementDirection * airSpeed, airAcceleration * Time.deltaTime); */
+            velocity.y = playerVelocity.y;
+            controller.Move(velocity * Time.deltaTime);
         }
     }
 
     private void UpdateJump() {
-        groundedPlayer = controller.isGrounded;
-        if (groundedPlayer && playerVelocity.y < 0)
+        isGrounded = controller.isGrounded;
+        if (isGrounded && playerVelocity.y < 0)
         {
-            animator.SetBool("IsFalling", false);
             playerVelocity.y = 0f;
         }
-        // Gravity needs to be applied first so the ground check is able to run.
-        playerVelocity.y += gravityValue * Time.deltaTime;
-        controller.Move(playerVelocity * Time.deltaTime);
-        playerVelocity.y = 0;
-        animator.SetBool("IsGrounded", controller.isGrounded);
-        
-        if (isJumping && controller.isGrounded)
+
+        if (isGrounded)
         {
-            if(jumpTimer == 0.0f)
+            animator.SetBool("IsGrounded", true);
+            animator.SetBool("IsFalling", false);
+            isGrounded = true;
+            isJumping = false;
+            isFalling = false;
+        } else {
+            animator.SetBool("IsGrounded", false);
+            isGrounded = false;
+
+            if ((isJumping && playerVelocity.y > 0) || playerVelocity.y < 2)
             {
                 animator.SetBool("IsFalling", true);
-                animator.SetTrigger("Jump");
-            }
-            jumpTimer += Time.deltaTime;
-            
-            if (jumpTimer > jumpDelay)
-            {
-                Debug.Log("Jumping");
-                playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityValue);
-                controller.Move(playerVelocity * Time.deltaTime);
-                isJumping = false;
+                isFalling = true;
             }
         }
+        
+        if (jump && controller.isGrounded)
+        {
+            animator.SetTrigger("Jump");
+            playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityValue);
+            isJumping = true;
+            jump = false;
+        }
 
+        // Gravity needs to be applied first so the ground check is able to run.
+        playerVelocity.y += gravityValue * Time.deltaTime;
 
+    }
+
+    private void OnAnimatorMove() {
+        if (isGrounded) {
+            Vector3 velocity = animator.deltaPosition * 5; // model is scaled 5x
+            velocity.y = playerVelocity.y * Time.deltaTime;
+            controller.Move(velocity);
+        }
     }
 
     private void SetMoveValue(Vector2 move)
@@ -145,10 +160,9 @@ public class PlayerMovement : MonoBehaviour
         moveDirection = move;
     }
 
-    private void Jump()
+    private void Jump(bool jump)
     {
-        jumpTimer = 0.0f;
-        isJumping = true;
+        this.jump = jump;
     }
 
     public void SetCamera(Camera camera)
