@@ -472,9 +472,9 @@ MonoBehaviour:
   dungeonParameters: {fileID: 11400000, guid: ad408d099b5da46c8be72b4f7ec74246, type: 2}
   rooms:
   - room: {fileID: 5771815153832966136, guid: 6fae223d5ea92f2b78b17cf89960ea74, type: 3}
-    Weight: 1
+    Weight: 0.5
   - room: {fileID: -8815402921376216592, guid: 3e8d19a933f702153a5971c9b3e0ff02, type: 3}
-    Weight: 0.1
+    Weight: 0
   playerSpawner: {fileID: 2068132229}
 --- !u!4 &1049580756
 Transform:
@@ -574,7 +574,7 @@ Transform:
   m_GameObject: {fileID: 2068132228}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 17, y: 25, z: 0}
+  m_LocalPosition: {x: -17, y: 25, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
