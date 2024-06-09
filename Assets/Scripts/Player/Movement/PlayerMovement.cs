@@ -18,6 +18,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float acceleration = 2.0f;
     [SerializeField] private float rotationSpeed = 2.0f;
     [SerializeField] private float jumpHeight = 1.0f;
+    [SerializeField] private float jumpDelay = 1.02f;
     [SerializeField] private float gravityValue = -9.81f;
     [SerializeField] private Vector3 up = Vector3.up;
 
@@ -27,6 +28,7 @@ public class PlayerMovement : MonoBehaviour
     Vector3 lastDirection;
     bool groundedPlayer;
     bool isJumping;
+    private float jumpTimer = 0.0f;
 
     private void Awake()
     {
@@ -41,8 +43,7 @@ public class PlayerMovement : MonoBehaviour
     {
         moveAction.performed += ctx => SetMoveValue(ctx.ReadValue<Vector2>());
         moveAction.canceled += ctx => SetMoveValue(ctx.ReadValue<Vector2>());
-        jumpAction.performed += ctx => Jump(true);
-        jumpAction.canceled += ctx => Jump(false);
+        jumpAction.performed += ctx => Jump();
     }
 
     private void OnDisable() => Unsubscribe();
@@ -53,8 +54,7 @@ public class PlayerMovement : MonoBehaviour
     {
         moveAction.performed -= ctx => SetMoveValue(ctx.ReadValue<Vector2>());
         moveAction.canceled -= ctx => SetMoveValue(ctx.ReadValue<Vector2>());
-        jumpAction.performed -= ctx => Jump(true);
-        jumpAction.canceled += ctx => Jump(false);
+        jumpAction.performed -= ctx => Jump();
 
     }
 
@@ -110,17 +110,34 @@ public class PlayerMovement : MonoBehaviour
         groundedPlayer = controller.isGrounded;
         if (groundedPlayer && playerVelocity.y < 0)
         {
+            animator.SetBool("IsFalling", false);
             playerVelocity.y = 0f;
         }
-        
-        if (isJumping && groundedPlayer)
-        {
-            animator.SetTrigger("Jump");
-            playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityValue);
-        }
-
+        // Gravity needs to be applied first so the ground check is able to run.
         playerVelocity.y += gravityValue * Time.deltaTime;
         controller.Move(playerVelocity * Time.deltaTime);
+        playerVelocity.y = 0;
+        animator.SetBool("IsGrounded", controller.isGrounded);
+        
+        if (isJumping && controller.isGrounded)
+        {
+            if(jumpTimer == 0.0f)
+            {
+                animator.SetBool("IsFalling", true);
+                animator.SetTrigger("Jump");
+            }
+            jumpTimer += Time.deltaTime;
+            
+            if (jumpTimer > jumpDelay)
+            {
+                Debug.Log("Jumping");
+                playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityValue);
+                controller.Move(playerVelocity * Time.deltaTime);
+                isJumping = false;
+            }
+        }
+
+
     }
 
     private void SetMoveValue(Vector2 move)
@@ -128,9 +145,10 @@ public class PlayerMovement : MonoBehaviour
         moveDirection = move;
     }
 
-    private void Jump(bool jumpState)
+    private void Jump()
     {
-        isJumping = jumpState;
+        jumpTimer = 0.0f;
+        isJumping = true;
     }
 
     public void SetCamera(Camera camera)
