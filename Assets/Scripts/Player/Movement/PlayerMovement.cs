@@ -14,6 +14,7 @@ public class PlayerMovement : MonoBehaviour
 
     [SerializeField] bool debugRays;
     [SerializeField] private float playerSpeed = 2.0f;
+    [SerializeField] private float airSpeed = 0.5f;
     [SerializeField] private float acceleration = 2.0f;
     [SerializeField] private float rotationSpeed = 2.0f;
     [SerializeField] private float jumpHeight = 1.0f;
@@ -65,11 +66,7 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
 
-        groundedPlayer = controller.isGrounded;
-        if (groundedPlayer && playerVelocity.y < 0)
-        {
-            playerVelocity.y = 0f;
-        }
+        UpdateJump();
 
         Vector3 inputDirection = new Vector3(moveDirection.x, 0.0f, moveDirection.y).normalized;
         // The projection of the camera's forward vector on the floor plane
@@ -84,7 +81,8 @@ public class PlayerMovement : MonoBehaviour
         Vector3 rightDirection = Vector3.Cross(projection, up).normalized;
         Vector3 theFinalFinalMovement = projection * inputDirection.z + -rightDirection * inputDirection.x;
 
-        currentVelocity = Vector3.Lerp(currentVelocity, theFinalFinalMovement * playerSpeed, acceleration * Time.deltaTime);
+        float speed = controller.isGrounded ? playerSpeed : airSpeed;
+        currentVelocity = Vector3.Lerp(currentVelocity, theFinalFinalMovement * speed, acceleration * Time.deltaTime);
 
         if (debugRays)
         {
@@ -100,11 +98,24 @@ public class PlayerMovement : MonoBehaviour
             gameObject.transform.rotation = Quaternion.Slerp(gameObject.transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
         }
 
-        controller.Move(currentVelocity * Time.deltaTime);
-        animator.SetFloat("Speed", currentVelocity.magnitude / playerSpeed);
 
+        controller.Move(currentVelocity * Time.deltaTime);
+        if (controller.isGrounded)
+        {
+            animator.SetFloat("Speed", currentVelocity.magnitude / playerSpeed);
+        }
+    }
+
+    private void UpdateJump() {
+        groundedPlayer = controller.isGrounded;
+        if (groundedPlayer && playerVelocity.y < 0)
+        {
+            playerVelocity.y = 0f;
+        }
+        
         if (isJumping && groundedPlayer)
         {
+            animator.SetTrigger("Jump");
             playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityValue);
         }
 
