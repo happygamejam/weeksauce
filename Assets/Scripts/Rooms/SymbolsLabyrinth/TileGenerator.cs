@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using NUnit.Framework;
 using Rooms.RochesColorees;
+using Rooms.SymbolsLabyrinth;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -24,13 +25,16 @@ public class TileGenerator : MonoBehaviour
     private int _previousIndex;
     private int _removedIndex = -1;
 
+    [SerializeField] private PropSpawner _propSpawner;
+    private int _propVariationValue = 0;
     
     private Step[] _tile1 =
     {
         new Step(0,'\u2193',0, new []{1, 0}, 1),
         new Step(0,'\u2192',0,new []{0, 1}, 2),
         new Step(0,'\u2191',0, new []{-1, 0}, 3),
-        new Step(0,'\u2190',0,new []{0, -1}, 2)
+        new Step(0,'\u2190',0,new []{0, -1}, 2),
+        new Step(0,'\u2191',0,new []{-1, 0}, 2)
     };
     
     private Step[] _tile2 = 
@@ -38,15 +42,17 @@ public class TileGenerator : MonoBehaviour
         new Step(1,'\u2192',1,new []{0, 1}, 3),
         new Step(1,'\u2191',1,new []{-1, 0}, 2),
         new Step(1,'\u2190',1,new []{0, -1}, 3),
-        new Step(1,'\u2192',1,new []{0, 1}, 1)
+        new Step(1,'\u2192',1,new []{0, 1}, 1),
+        new Step(1,'\u2190',1,new []{0, -1}, 1)
     };
     
     private Step[] _tile3 = 
     {
-        new Step(2, '\u2191',2,new []{-1, 0}, 3),
-        new Step(2, '\u2191',2,new []{-1, 0}, 2),
+        new Step(2, '\u2191',2,new []{-1, 0}, 4),
+        new Step(2, '\u2193',2,new []{1, 0}, 1),
         new Step(2, '\u2192',2,new []{0, 1}, 3),
-        new Step(2, '\u2190',2,new []{0, -1}, 2)
+        new Step(2, '\u2190',2,new []{0, -1}, 2),
+        new Step(2,'\u2192',2,new []{0, 1}, 1)
     };
     
     private Step[] _tile4 = 
@@ -54,7 +60,8 @@ public class TileGenerator : MonoBehaviour
         new Step(3,'\u2192',3,new []{0, 1}, 1),
         new Step(3,'\u2190',3,new []{0, -1}, 1),
         new Step(3,'\u2193',3,new []{1, 0}, 1),
-        new Step(3,'\u2191',3,new []{-1, 0}, 1),
+        new Step(3,'\u2191',3,new []{-1, 0}, 4),
+        new Step(3,'\u2191',3,new []{-1, 0}, 4)
     };
 
     // private Step[] _tile1 =
@@ -90,13 +97,16 @@ public class TileGenerator : MonoBehaviour
     // };
     
     private Step[][] _rule = new Step[4][];
-   
+
+    [SerializeField] private LibrarySpawner _librarySpawner;
+
     
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        _propVariationValue = _propSpawner.GetPropVariationValue() % 3;
         _tiles = new char[sizeX, sizeY];
         _rule[0] = _tile1;
         _rule[1] = _tile2;
@@ -105,7 +115,7 @@ public class TileGenerator : MonoBehaviour
 
         List<Step> stepsToGenerate = new List<Step>();
         int[] startingPosition = new []{0, 0};
-        int maxRetry = 10;
+        int maxRetry = 30;
         
         while (maxRetry > 0)
         {
@@ -127,7 +137,7 @@ public class TileGenerator : MonoBehaviour
         
 
             //Déterminer ici premier icone précédent
-            _previousIndex = Random.Range(0,4);
+            _previousIndex = 4;
             bool found = true;
             int currentStep = 0;
             while (_currentPosition[0] > 0)
@@ -144,6 +154,7 @@ public class TileGenerator : MonoBehaviour
             if (currentStep >= minSteps && found)
             {
                 startingPosition = startPosition;
+                _librarySpawner.SpawnLibrary(startingPosition[1]);
                 _tiles[startPosition[0], startPosition[1]] = 's';
                 _tiles[_currentPosition[0], _currentPosition[1]] = 'F';
                 Print2DArray(_tiles);
@@ -154,6 +165,10 @@ public class TileGenerator : MonoBehaviour
         if (maxRetry > 0)
         {
             InstanciateNewPath(startingPosition, stepsToGenerate);
+        }
+        else
+        {
+            Debug.Log("failed to instantiate maze");
         }
     }
 
@@ -272,8 +287,38 @@ public class TileGenerator : MonoBehaviour
         {
             _removedIndex = stepFound.Tile;
         }
-        
-        _previousIndex = stepFound.Tile;
+
+        switch (_propVariationValue)
+        {
+            case 0 : 
+                _previousIndex = stepFound.Tile;
+                break;
+            case 1 :
+                switch (stepFound.StepDirection[0])
+                {
+                    //up
+                    case -1 when stepFound.StepDirection[1] == 0:
+                        _previousIndex = 0;
+                        break;
+                    //right
+                    case 0 when stepFound.StepDirection[1] == 1:
+                        _previousIndex = 1;
+                        break;
+                    //down
+                    case 1 when stepFound.StepDirection[1] == 0:
+                        _previousIndex = 2;
+                        break;
+                    //left
+                    case 0 when stepFound.StepDirection[1] == -1:
+                        _previousIndex = 3;
+                        break;
+                }
+                break;
+            case 2:
+                _previousIndex = stepFound.NbSteps;
+                break;
+        }
+       
         
         _tiles[_currentPosition[0], _currentPosition[1]] = stepFound.Symbol;
         for (int i = 0; i < stepFound.NbSteps; i++)
@@ -308,18 +353,23 @@ public class TileGenerator : MonoBehaviour
         GameObject[,] tileInstances = new GameObject[sizeX, sizeY];
 
         int[] currentPosition = new[] { initialPosition[0], initialPosition[1] };
-
+        bool rotated = false;
         for (int i = 0; i < _tiles.GetLength(0); i++)
         {
             for (int j = 0; j < _tiles.GetLength(1); j++)
             {
-                GameObject tileInstance = Instantiate(_tilePrefab, new Vector3(i * 4, 0, j * 4), Quaternion.identity);
-                tileInstance.transform.parent = _tileParent.transform;
+                GameObject tileInstance = Instantiate(_tilePrefab, _tileParent.transform);
+                if(rotated)  tileInstance.transform.Rotate(Vector3.up, 90);
+                rotated = !rotated;
+                
+                tileInstance.transform.localPosition = new Vector3(i * 4, 0, j * 4);
                 tileInstance.GetComponent<LabyrinthTile>().Setup(this, -1);
                 tileInstance.transform.GetChild(0).GetComponent<MeshRenderer>().SetMaterials(new List<Material>(){symbols[Random.Range(0, 4)]});
                 tileInstances[i, j] = tileInstance;
     
             }
+
+            rotated = !rotated;
         }
 
         tileInstances[currentPosition[0], currentPosition[1]].GetComponent<LabyrinthTile>().AddValidLevel(0);
