@@ -27,6 +27,7 @@ public class PlayerMovement : MonoBehaviour
     Vector3 lastDirection;
     Vector3 lastVelocity;
     bool jump;
+    private bool lastGrounded = false;
     private bool isGrounded = false;
     private bool isJumping = false;
     private bool isFalling = false;
@@ -61,7 +62,7 @@ public class PlayerMovement : MonoBehaviour
 
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         if (roomCamera == null || !roomCamera.enabled)
         {
@@ -116,25 +117,26 @@ public class PlayerMovement : MonoBehaviour
             playerVelocity.y = 0f;
         }
 
-        if (isGrounded)
+        if (isGrounded != lastGrounded)
         {
-            animator.SetBool("IsGrounded", true);
-            animator.SetBool("IsFalling", false);
-            isGrounded = true;
-            isJumping = false;
-            isFalling = false;
-        } else {
-            animator.SetBool("IsGrounded", false);
-            isGrounded = false;
+            lastGrounded = isGrounded;
+            animator.SetBool("IsGrounded", isGrounded);
 
-            if ((isJumping && playerVelocity.y > 0) || playerVelocity.y < 2)
+            if (isGrounded)
             {
-                animator.SetBool("IsFalling", true);
-                isFalling = true;
+                animator.SetBool("IsFalling", false);
+                isJumping = false;
+                isFalling = false;
+            } else {
+                if ((isJumping && playerVelocity.y > 0) || playerVelocity.y < -2)
+                {
+                    animator.SetBool("IsFalling", true);
+                    isFalling = true;
+                }
             }
         }
-        
-        if (jump && controller.isGrounded)
+
+        if (jump && isGrounded)
         {
             animator.SetTrigger("Jump");
             playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityValue);
@@ -142,9 +144,7 @@ public class PlayerMovement : MonoBehaviour
             jump = false;
         }
 
-        // Gravity needs to be applied first so the ground check is able to run.
         playerVelocity.y += gravityValue * Time.deltaTime;
-
     }
 
     private void OnAnimatorMove() {
