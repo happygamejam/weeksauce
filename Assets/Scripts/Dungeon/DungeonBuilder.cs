@@ -25,7 +25,6 @@ public class DungeonBuilder : MonoBehaviour
         Generate(dungeonParameters);
 
         Debug.Assert(playerSpawner != null, "PlayerSpawner is not set in DungeonBuilder");
-        Debug.Log("Room instances: " + roomInstances.Count);
         playerSpawner.SpawnPlayer(roomInstances[0]);
     }
 

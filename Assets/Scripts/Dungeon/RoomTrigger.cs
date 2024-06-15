@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class RoomTrigger : MonoBehaviour
 {
+    [SerializeField]
+    private Room room;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -11,5 +13,10 @@ public class RoomTrigger : MonoBehaviour
         }
 
         Debug.Log("Player hit exit trigger");
+        if (room == null)
+        {
+            return;
+        }
+        room.SetupCamera(other.gameObject);
     }
 }
