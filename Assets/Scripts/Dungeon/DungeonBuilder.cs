@@ -12,6 +12,7 @@ public class DungeonBuilder : MonoBehaviour
     private PlayerSpawner playerSpawner;
 
     private List<Room> roomInstances = new List<Room>();
+    private int roomIndex = -1;
 
     private void OnEnable() {
         var dungeonParameters = DungeonManager.ActiveDungeon;
@@ -44,6 +45,15 @@ public class DungeonBuilder : MonoBehaviour
             Vector3 attach = room.GameObject.transform.Find("Points/EndPoint").position;
             cumulativeOffset = attach - origin;
             Debug.Log("Next offset is " + cumulativeOffset);
+
+            // If not the last room, we need to delete some elements to allow for seamless chaining
+            if (i < parameters.roomCount - 1) {
+                var objs = new List<GameObject>();
+                GameObject.FindGameObjectsWithTag("ChainDelete", objs);
+                foreach (GameObject obj in objs) {
+                    Destroy(obj);
+                }
+            }
 
             roomInstances.Add(room);
         }
