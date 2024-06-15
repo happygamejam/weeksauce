@@ -277,7 +277,7 @@ MonoBehaviour:
   - room: {fileID: 5771815153832966136, guid: 6fae223d5ea92f2b78b17cf89960ea74, type: 3}
     Weight: 1
   - room: {fileID: -8815402921376216592, guid: 3e8d19a933f702153a5971c9b3e0ff02, type: 3}
-    Weight: 0.5
+    Weight: 0
   playerSpawner: {fileID: 2068132229}
 --- !u!4 &1049580756
 Transform:
