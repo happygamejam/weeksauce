@@ -219,6 +219,7 @@ public class TileGenerator : MonoBehaviour
                     return currentStep;
                 }
             }
+            catch (IndexOutOfRangeException) {}
             catch (Exception e)
             {
                 Debug.LogException(e, this);
@@ -261,6 +262,7 @@ public class TileGenerator : MonoBehaviour
                     return currentStep;
                 }
             }
+            catch (IndexOutOfRangeException) {}
             catch (Exception e)
             {
                 Debug.LogException(e, this);
@@ -387,6 +389,7 @@ public class TileGenerator : MonoBehaviour
                 {
                     tileInstances[currentPosition[0], currentPosition[1]].GetComponent<BallroomTile>().AddValidLevel(currentLevel);
                 }
+                catch (IndexOutOfRangeException) { }
                 catch (Exception e)
                 {
                     Debug.LogException(e, this);

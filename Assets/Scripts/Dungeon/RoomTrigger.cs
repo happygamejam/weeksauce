@@ -10,6 +10,6 @@ public class RoomTrigger : MonoBehaviour
             return;
         }
 
-        transform.parent.GetComponent<Room>().Enter();
+        Debug.Log("Player hit exit trigger");
     }
 }
