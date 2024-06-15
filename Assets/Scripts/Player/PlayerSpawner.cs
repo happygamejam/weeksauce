@@ -16,7 +16,7 @@ public class PlayerSpawner : MonoBehaviour
 
         player = Instantiate(playerPrefab, transform.position, transform.rotation);
 
-        //Camera.main.enabled = false;
+        Camera.main.enabled = false;
         SetupCamera(room);
     }
 
