@@ -22,7 +22,7 @@ namespace Rooms.SymbolsLabyrinth
         };
         public void SpawnLibrary(int tileIndex)
         {
-            Debug.Log("Tuile # " + (tileIndex + 1) + " Ã  partir de la gauche" );
+            Debug.Log("Tuile # " + (tileIndex + 1) + " à partir de la gauche" );
             tileText.GetComponent<Text>().text = phrases[tileIndex];
         }
 
