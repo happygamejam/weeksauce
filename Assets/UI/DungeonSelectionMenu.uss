@@ -45,11 +45,11 @@ Label {
 }
 
 .unity-list-view__item:hover {
-    background-color: none;
+    background-color: rgba(0,0,0,0);
 }
 
 .unity-list-view__item:selected {
-    background-color: none;
+    background-color: rgba(0,0,0,0);
 }
 
 .unity-list-view__item:selected > #list-entry {
