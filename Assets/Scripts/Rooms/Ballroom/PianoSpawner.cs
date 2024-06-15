@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace Rooms.SymbolsLabyrinth
 {
-    public class LibrarySpawner : MonoBehaviour
+    public class PianoSpawner : MonoBehaviour
     {
         [SerializeField] private GameObject tileText;
 

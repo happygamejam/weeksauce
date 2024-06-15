@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
-public class LabyrinthTile : MonoBehaviour
+public class BallroomTile : MonoBehaviour
 {
     private TileGenerator _master;
     private int _level = 0;
