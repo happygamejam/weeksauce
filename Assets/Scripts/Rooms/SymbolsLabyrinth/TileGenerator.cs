@@ -18,6 +18,7 @@ public class TileGenerator : MonoBehaviour
 
     [SerializeField] private GameObject _tileParent;
     [SerializeField] private GameObject _tilePrefab;
+    [SerializeField] private GameObject _theDuckingFloor;
     
     int[] _currentPosition = { 0, 0 };
     [SerializeField] private Material[] symbols;
@@ -363,7 +364,7 @@ public class TileGenerator : MonoBehaviour
                 rotated = !rotated;
                 
                 tileInstance.transform.localPosition = new Vector3(i * 4, 0, j * 4);
-                tileInstance.GetComponent<LabyrinthTile>().Setup(this, -1);
+                tileInstance.GetComponent<LabyrinthTile>().Setup(this, _theDuckingFloor, -1);
                 tileInstance.transform.GetChild(0).GetComponent<MeshRenderer>().SetMaterials(new List<Material>(){symbols[Random.Range(0, 4)]});
                 tileInstances[i, j] = tileInstance;
     
@@ -377,7 +378,7 @@ public class TileGenerator : MonoBehaviour
         int currentLevel = 0;
         foreach (Step currentStep in steps)
         {
-            tileInstances[currentPosition[0], currentPosition[1]].GetComponent<LabyrinthTile>().Setup(this, currentLevel);
+            tileInstances[currentPosition[0], currentPosition[1]].GetComponent<LabyrinthTile>().Setup(this, _theDuckingFloor, currentLevel);
             tileInstances[currentPosition[0], currentPosition[1]].transform.GetChild(0).GetComponent<MeshRenderer>().SetMaterials(new List<Material>(){symbols[currentStep.Id]});
             currentLevel++;
             for (int j = 0; j < currentStep.NbSteps; j++)
