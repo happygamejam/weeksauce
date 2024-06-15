@@ -2,10 +2,10 @@ using UnityEngine;
 
 public class Library : Room
 {
-    public override GameObject Generate(DungeonParameters parameters)
+    public override Room Generate(DungeonParameters parameters)
     {
         Debug.Log("Generating a side room");
-        room = Instantiate(gameObject, new Vector3(0, 0, 0), Quaternion.identity);
+        var room = Instantiate(this, new Vector3(0, 0, 0), Quaternion.identity);
         var provider = room.GetComponent<DungeonParametersProvider>();
         if (provider == null)
         {

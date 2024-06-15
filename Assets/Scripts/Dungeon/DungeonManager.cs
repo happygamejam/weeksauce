@@ -10,12 +10,7 @@ public class DungeonManager : MonoBehaviour
     private DungeonParameters activeDungeon;
     private DungeonParameters previousDungeon;
 
-    private List<Room> rooms;
-    private int currentRoomIndex = 0;
-
     public static DungeonParameters ActiveDungeon => instance.activeDungeon;
-
-    public event Action<GameObject> OnRoomChanged;
 
     private void Awake()
     {
@@ -53,18 +48,6 @@ public class DungeonManager : MonoBehaviour
 
         StartDungeon(dungeon);
     }
-
-    public static void NextRoom() {
-        if (instance.currentRoomIndex >= instance.rooms.Count - 1) {
-            Debug.Log("Reached the end of the dungeon.");
-            SceneManager.LoadScene("PlayMenu");
-            return;
-        }
-        
-        instance.currentRoomIndex++;
-        
-    }
-
     public static void Quit() {
         instance.previousDungeon = null;
         instance.activeDungeon = null;

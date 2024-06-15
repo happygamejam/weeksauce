@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 
@@ -11,7 +12,7 @@ public class DungeonBuilder : MonoBehaviour
     [SerializeField]
     private PlayerSpawner playerSpawner;
 
-    private List<Room> roomInstances = new List<Room>();
+    private readonly List<Room> roomInstances = new();
     private int roomIndex = -1;
 
     private void OnEnable() {
@@ -24,6 +25,7 @@ public class DungeonBuilder : MonoBehaviour
         Generate(dungeonParameters);
 
         Debug.Assert(playerSpawner != null, "PlayerSpawner is not set in DungeonBuilder");
+        Debug.Log("Room instances: " + roomInstances.Count);
         playerSpawner.SpawnPlayer(roomInstances[0]);
     }
 
@@ -34,15 +36,14 @@ public class DungeonBuilder : MonoBehaviour
         for (int i = 0; i < parameters.roomCount; i++)
         {
             WeightedRoom result = weightedRooms.Pick();
-            var room = result.room;
-            room.SetPlayerSpawner(playerSpawner);
+            var room = result.room.Generate(parameters);
+            room.name = "Room " + i;
 
-            room.Generate(parameters);
-            Vector3 origin = room.GameObject.transform.Find("Points/StartPoint").position;
-            room.GameObject.transform.position = cumulativeOffset;
-            Debug.Log("Placing room at " + room.GameObject.transform.position);
+            Vector3 origin = room.transform.Find("Points/StartPoint").position;
+            room.transform.position = cumulativeOffset;
+            Debug.Log("Placing room at " + room.transform.position);
 
-            Vector3 attach = room.GameObject.transform.Find("Points/EndPoint").position;
+            Vector3 attach = room.transform.Find("Points/EndPoint").position;
             cumulativeOffset = attach - origin;
             Debug.Log("Next offset is " + cumulativeOffset);
 
@@ -54,6 +55,9 @@ public class DungeonBuilder : MonoBehaviour
                     Destroy(obj);
                 }
             }
+
+            room.SetPlayerSpawner(playerSpawner);
+            room.DisableCamera();
 
             roomInstances.Add(room);
         }

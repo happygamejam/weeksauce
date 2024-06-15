@@ -2,11 +2,9 @@ using UnityEngine;
 
 public abstract class Room : MonoBehaviour
 {
-   protected GameObject room;
-   public GameObject GameObject => room;
    private PlayerSpawner playerSpawner;
 
-   public abstract GameObject Generate(DungeonParameters parameters);
+   public abstract Room Generate(DungeonParameters parameters);
 
    public void SetPlayerSpawner(PlayerSpawner playerSpawner)
    {
@@ -14,8 +12,26 @@ public abstract class Room : MonoBehaviour
    }
 
    public void Enter() {
-      playerSpawner.SetupCamera(this);
    }
+
+    public void SetupCamera(GameObject player)
+    {
+        Debug.Log("Setting up camera for room ");
+        var movement = player.GetComponent<PlayerMovement>();
+        Debug.Assert(player != null, "Player does not have a PlayerMovement component.");
+
+        var camera = GetComponentInChildren<Camera>();
+        Debug.Assert(camera != null, "Room does not have a camera.");
+
+        camera.enabled = true;
+        movement.SetCamera(camera);
+    }
+
+    public void DisableCamera()
+    {
+        var camera = GetComponentInChildren<Camera>();
+        camera.enabled = false;
+    }
 }
 
 [System.Serializable]
