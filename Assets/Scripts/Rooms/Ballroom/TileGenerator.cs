@@ -28,6 +28,8 @@ public class TileGenerator : MonoBehaviour
 
     [SerializeField] private PropSpawner _propSpawner;
     private int _propVariationValue = 0;
+
+    [SerializeField] private GameObject _door;
     
     private Step[] _tile1 =
     {
@@ -354,6 +356,8 @@ public class TileGenerator : MonoBehaviour
 
         int[] currentPosition = new[] { initialPosition[0], initialPosition[1] };
         bool rotated = false;
+        int maxLevel = steps.Count;
+        
         for (int i = 0; i < _tiles.GetLength(0); i++)
         {
             for (int j = 0; j < _tiles.GetLength(1); j++)
@@ -363,7 +367,7 @@ public class TileGenerator : MonoBehaviour
                 rotated = !rotated;
                 
                 tileInstance.transform.localPosition = new Vector3(i * 4, 0, j * 4);
-                tileInstance.GetComponent<BallroomTile>().Setup(this, _theDuckingFloor, -1);
+                tileInstance.GetComponent<BallroomTile>().Setup(this, _theDuckingFloor, _door, -1, maxLevel );
                 tileInstance.transform.GetChild(0).GetComponent<MeshRenderer>().SetMaterials(new List<Material>(){symbols[Random.Range(0, 4)]});
                 tileInstances[i, j] = tileInstance;
     
@@ -377,7 +381,7 @@ public class TileGenerator : MonoBehaviour
         int currentLevel = 0;
         foreach (Step currentStep in steps)
         {
-            tileInstances[currentPosition[0], currentPosition[1]].GetComponent<BallroomTile>().Setup(this, _theDuckingFloor, currentLevel);
+            tileInstances[currentPosition[0], currentPosition[1]].GetComponent<BallroomTile>().Setup(this, _theDuckingFloor, _door, currentLevel, maxLevel );
             tileInstances[currentPosition[0], currentPosition[1]].transform.GetChild(0).GetComponent<MeshRenderer>().SetMaterials(new List<Material>(){symbols[currentStep.Id]});
             currentLevel++;
             for (int j = 0; j < currentStep.NbSteps; j++)

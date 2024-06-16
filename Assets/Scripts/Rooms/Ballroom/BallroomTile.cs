@@ -10,24 +10,29 @@ public class BallroomTile : MonoBehaviour
 {
     private TileGenerator _master;
     private int _level = 0;
-
+    private int _maxLevel = 0;
+    
     private List<int> _validLevels = new List<int>();
     private int _checkpointLevel = -1;
     private GameObject _theDuckingFloor;
 
     private GameObject _cube;
+    private GameObject _door;
+    
 
     public void OnEnable()
     {
         _cube = transform.GetChild(0).gameObject;
     }
 
-    public void Setup(TileGenerator newMaster, GameObject theDuckingFloor, int newCheckpointLevel)
+    public void Setup(TileGenerator newMaster, GameObject theDuckingFloor, GameObject door, int newCheckpointLevel, int maxLevel)
     {
         _master = newMaster;
         newMaster.UpdateTileEvent += UpdateLevel;
         _checkpointLevel = newCheckpointLevel;
         _theDuckingFloor = theDuckingFloor;
+        _maxLevel = maxLevel;
+        _door = door;
     }
 
     public void AddValidLevel(int newValidLevel)
@@ -44,11 +49,8 @@ public class BallroomTile : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log(_level);
-        foreach( var x in _validLevels) {
-            Debug.Log( x.ToString());
-        }
-
+       Debug.Log(_level);
+        Debug.Log(_maxLevel);
        
         if ( !_validLevels.Contains(_level))
         {
@@ -79,6 +81,13 @@ public class BallroomTile : MonoBehaviour
         if (_level == _checkpointLevel)
         {
             _master.UpdateTileLevel(_checkpointLevel + 1);
+        }
+
+        if (_level == _maxLevel)
+        {
+            Debug.Log("Boom?");
+            print(_door);
+            Destroy(_door.gameObject);
         }
     }
 

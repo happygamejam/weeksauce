@@ -1493,6 +1493,7 @@ MonoBehaviour:
   - {fileID: 2100000, guid: ea70923e0da55d24fb1bcb68707a5ac6, type: 2}
   - {fileID: 2100000, guid: a58b4d271f607f349a91e9458c94f95b, type: 2}
   _propSpawner: {fileID: 3926081350117249451}
+  _door: {fileID: 873685954772975551}
   _pianoSpawner: {fileID: 8357882895527895796}
 --- !u!1 &5677131842634890861
 GameObject:
@@ -2339,6 +2340,11 @@ PrefabInstance:
 --- !u!4 &528086723181012229 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4014485422076702133, guid: 0b7cd2e973266b9409bc74adc51439c2, type: 3}
+  m_PrefabInstance: {fileID: 3522506687897422000}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &873685954772975551 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4394811285522216719, guid: 0b7cd2e973266b9409bc74adc51439c2, type: 3}
   m_PrefabInstance: {fileID: 3522506687897422000}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4476769886183687282
