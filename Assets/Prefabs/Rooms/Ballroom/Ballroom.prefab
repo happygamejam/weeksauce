@@ -30,8 +30,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5266417298309935224}
-  - {fileID: 7072759543767598849}
-  - {fileID: 910473738060624441}
   - {fileID: 1619947567707361676}
   m_Father: {fileID: 447453828479449280}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -754,6 +752,8 @@ Transform:
   - {fileID: 7906430408700324190}
   - {fileID: 6236555552013566368}
   - {fileID: 4573151348389471292}
+  - {fileID: 7072759543767598849}
+  - {fileID: 910473738060624441}
   - {fileID: 6507387652175740963}
   - {fileID: 518228239601832356}
   - {fileID: 3881585574760494633}
@@ -1044,7 +1044,7 @@ GameObject:
   - component: {fileID: 7072759543767598849}
   m_Layer: 0
   m_Name: EntranceDoor
-  m_TagString: Untagged
+  m_TagString: ChainDelete
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1057,8 +1057,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3764598924175645016}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -45.000008, y: 0.0000038146973, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -45, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1066,7 +1066,7 @@ Transform:
   - {fileID: 1781519701379044097}
   - {fileID: 4456176597256327953}
   - {fileID: 691020272550586823}
-  m_Father: {fileID: 6507387652175740963}
+  m_Father: {fileID: 447453828479449280}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3970322906873966575
 GameObject:
@@ -1196,7 +1196,7 @@ GameObject:
   - component: {fileID: 910473738060624441}
   m_Layer: 0
   m_Name: ExitDoor
-  m_TagString: ChainDelete
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1209,8 +1209,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4141184271782326468}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.9999962, y: -0.0000019073486, z: -0.0000019073486}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -1, y: -0, z: -0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1218,7 +1218,7 @@ Transform:
   - {fileID: 3137710577823148116}
   - {fileID: 2663728128038180745}
   - {fileID: 528086723181012229}
-  m_Father: {fileID: 6507387652175740963}
+  m_Father: {fileID: 447453828479449280}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4336204468145127545
 GameObject:

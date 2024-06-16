@@ -46,11 +46,11 @@ public class DungeonBuilder : MonoBehaviour
             cumulativeOffset = attach - origin;
             Debug.Log("Next offset is " + cumulativeOffset);
 
-            // If not the last room, we need to delete some elements to allow for seamless chaining
-            if (i < parameters.roomCount - 1) {
-                var objs = new List<GameObject>();
-                GameObject.FindGameObjectsWithTag("ChainDelete", objs);
-                foreach (GameObject obj in objs) {
+            // Delete the entrance to to be able to chain rooms togther.
+            // Except for the first room because we need it.
+            if (i != 0) {
+                foreach (GameObject obj in FindChildrenWithTag(room.gameObject, "ChainDelete"))
+                {
                     Destroy(obj);
                 }
             }
@@ -61,4 +61,23 @@ public class DungeonBuilder : MonoBehaviour
             roomInstances.Add(room);
         }
     }
+
+    // TODO: This should probably be done recursively so it doesn't have to be a direct child.
+    private List<GameObject> FindChildrenWithTag(GameObject parent, string tag)
+    {
+        List<GameObject> children = new();
+
+        foreach (Transform transform in parent.transform)
+        {
+            if (!transform.CompareTag(tag))
+            {
+                continue;
+            }
+            children.Add(transform.gameObject);
+        }
+
+        return children;
+    }
 }
+
+
