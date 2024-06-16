@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5670281213535509778}
   - component: {fileID: 2027567506327766262}
   m_Layer: 0
-  m_Name: LabyrinthTile
+  m_Name: BallroomTile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

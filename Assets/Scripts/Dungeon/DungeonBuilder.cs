@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 
@@ -11,7 +12,8 @@ public class DungeonBuilder : MonoBehaviour
     [SerializeField]
     private PlayerSpawner playerSpawner;
 
-    private List<Room> roomInstances = new List<Room>();
+    private readonly List<Room> roomInstances = new();
+    private int roomIndex = -1;
 
     private void OnEnable() {
         var dungeonParameters = DungeonManager.ActiveDungeon;
@@ -33,19 +35,49 @@ public class DungeonBuilder : MonoBehaviour
         for (int i = 0; i < parameters.roomCount; i++)
         {
             WeightedRoom result = weightedRooms.Pick();
-            var room = result.room;
-            room.SetPlayerSpawner(playerSpawner);
+            var room = result.room.Generate(parameters);
+            room.name = "Room " + i;
 
-            room.Generate(parameters);
-            Vector3 origin = room.GameObject.transform.Find("Points/StartPoint").position;
-            room.GameObject.transform.position = cumulativeOffset;
-            Debug.Log("Placing room at " + room.GameObject.transform.position);
+            Vector3 origin = room.transform.Find("Points/StartPoint").position;
+            room.transform.position = cumulativeOffset;
+            Debug.Log("Placing room at " + room.transform.position);
 
-            Vector3 attach = room.GameObject.transform.Find("Points/EndPoint").position;
+            Vector3 attach = room.transform.Find("Points/EndPoint").position;
             cumulativeOffset = attach - origin;
             Debug.Log("Next offset is " + cumulativeOffset);
+
+            // Delete the entrance to to be able to chain rooms togther.
+            // Except for the first room because we need it.
+            if (i != 0) {
+                foreach (GameObject obj in FindChildrenWithTag(room.gameObject, "ChainDelete"))
+                {
+                    Destroy(obj);
+                }
+            }
+
+            room.SetPlayerSpawner(playerSpawner);
+            room.DisableCamera();
 
             roomInstances.Add(room);
         }
     }
+
+    // TODO: This should probably be done recursively so it doesn't have to be a direct child.
+    private List<GameObject> FindChildrenWithTag(GameObject parent, string tag)
+    {
+        List<GameObject> children = new();
+
+        foreach (Transform transform in parent.transform)
+        {
+            if (!transform.CompareTag(tag))
+            {
+                continue;
+            }
+            children.Add(transform.gameObject);
+        }
+
+        return children;
+    }
 }
+
+
