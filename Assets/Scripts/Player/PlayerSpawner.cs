@@ -2,22 +2,23 @@ using UnityEngine;
 
 public class PlayerSpawner : MonoBehaviour
 {
-    [SerializeField]
-    private GameObject playerPrefab;
+	[SerializeField]
+	private GameObject playerPrefab;
 
-    private GameObject player;
+	private GameObject player;
 
-    public void SpawnPlayer(Room room) {
-        if(playerPrefab == null)
-        {
-            Debug.LogError("Player prefab is not set in PlayerSpawner.");
-            return;
-        }
+	public void SpawnPlayer(Room room)
+	{
+		if ( playerPrefab == null )
+		{
+			Debug.LogError( "Player prefab is not set in PlayerSpawner." );
+			return;
+		}
 
-        player = Instantiate(playerPrefab, transform.position, transform.rotation);
+		player = Instantiate( playerPrefab, transform.position, transform.rotation );
 
-        //Camera.main.enabled = false;
-        room.SetupCamera(player);
-    }
+		//Camera.main.enabled = false;
+		room.SetupCamera( player );
+	}
 
- }
+}

@@ -1,5 +1,5 @@
 
 public interface IWeighted
 {
-    float Weight { get; }
+	float Weight { get; }
 }

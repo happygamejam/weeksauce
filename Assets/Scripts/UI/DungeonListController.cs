@@ -4,89 +4,93 @@ using UnityEngine.UIElements;
 
 public class DungeonListController
 {
-    VisualTreeAsset dungeonEntryTemplate;
+	VisualTreeAsset dungeonEntryTemplate;
 
-    // UI Elements
-    private ListView dungeonListView;
-    private Label dungeonName;
-    private Label difficulty;
-    private Label rooms;
-    private Button playButton;
+	// UI Elements
+	private ListView dungeonListView;
+	private Label dungeonName;
+	private Label difficulty;
+	private Label rooms;
+	private Button playButton;
 
-    private List<DungeonParameters> dungeonList;
-    private DungeonParameters selected;
+	private List<DungeonParameters> dungeonList;
+	private DungeonParameters selected;
 
-    public void Initialize(VisualElement root, VisualTreeAsset entryTemplate)
-    {
-        FetchDungeonList();
+	public void Initialize(VisualElement root, VisualTreeAsset entryTemplate)
+	{
+		FetchDungeonList();
 
-        dungeonEntryTemplate = entryTemplate;
+		dungeonEntryTemplate = entryTemplate;
 
-        dungeonListView = root.Q<ListView>("dungeon-list");
-        dungeonName = root.Q<Label>("dungeon-name");
-        difficulty = root.Q<Label>("dungeon-difficulty");
-        rooms = root.Q<Label>("dungeon-rooms");
-        playButton = root.Q<Button>("play-button");
-        playButton.clicked += OnPlayClicked;
+		dungeonListView = root.Q<ListView>( "dungeon-list" );
+		dungeonName = root.Q<Label>( "dungeon-name" );
+		difficulty = root.Q<Label>( "dungeon-difficulty" );
+		rooms = root.Q<Label>( "dungeon-rooms" );
+		playButton = root.Q<Button>( "play-button" );
+		playButton.clicked += OnPlayClicked;
 
-        FillList();
+		FillList();
 
-        dungeonListView.selectionChanged += OnDungeonSelected;
-    }
+		dungeonListView.selectionChanged += OnDungeonSelected;
+	}
 
-    private void FetchDungeonList()
-    {
-        dungeonList = new List<DungeonParameters>();
-        dungeonList.AddRange(Resources.LoadAll<DungeonParameters>("Dungeons"));
-        Debug.Log("Found " + dungeonList.Count + " dungeons");
-    }
+	private void FetchDungeonList()
+	{
+		dungeonList = new List<DungeonParameters>();
+		dungeonList.AddRange( Resources.LoadAll<DungeonParameters>( "Dungeons" ) );
+		Debug.Log( "Found " + dungeonList.Count + " dungeons" );
+	}
 
-    private void FillList()
-    {
-        dungeonListView.makeItem = () =>
-        {
-            var entry = dungeonEntryTemplate.Instantiate();
+	private void FillList()
+	{
+		dungeonListView.makeItem = () =>
+		{
+			var entry = dungeonEntryTemplate.Instantiate();
 
-            var entryLogic = new DungeonListEntryController();
-            entry.userData = entryLogic;
-            entryLogic.SetVisualElement(entry);
+			var entryLogic = new DungeonListEntryController();
+			entry.userData = entryLogic;
+			entryLogic.SetVisualElement( entry );
 
-            return entry;
-        };
+			return entry;
+		};
 
-        // Set up bind function for a specific list entry
-        dungeonListView.bindItem = (item, index) =>
-        {
-            (item.userData as DungeonListEntryController)?.SetDungeonParameters(dungeonList[index]);
-        };
+		// Set up bind function for a specific list entry
+		dungeonListView.bindItem = (item, index) =>
+		{
+			(item.userData as DungeonListEntryController)?.SetDungeonParameters( dungeonList[index] );
+		};
 
-        dungeonListView.fixedItemHeight = 45;
+		dungeonListView.fixedItemHeight = 45;
 
-        dungeonListView.itemsSource = dungeonList;
-    }
+		dungeonListView.itemsSource = dungeonList;
+	}
 
-    private void OnDungeonSelected(IEnumerable<object> selected) {
-        var dungeon = dungeonListView.selectedItem as DungeonParameters;
-        this.selected = dungeon;
+	private void OnDungeonSelected(IEnumerable<object> selected)
+	{
+		var dungeon = dungeonListView.selectedItem as DungeonParameters;
+		this.selected = dungeon;
 
-        if (dungeon == null) {
-            dungeonName.text = "Select a dungeon";
-            difficulty.text = "";
-            rooms.text = "";
-            return;
-        }
+		if ( dungeon == null )
+		{
+			dungeonName.text = "Select a dungeon";
+			difficulty.text = "";
+			rooms.text = "";
+			return;
+		}
 
-        dungeonName.text = dungeon.dungeonName;
-        /* difficulty.text = "Difficulty: " + dungeon.difficulty; */
-        rooms.text = dungeon.roomCount.ToString();
-    }
+		dungeonName.text = dungeon.dungeonName;
+		/* difficulty.text = "Difficulty: " + dungeon.difficulty; */
+		rooms.text = dungeon.roomCount.ToString();
+	}
 
-    private void OnPlayClicked() {
-        if (selected == null) {
-            Debug.LogError("No dungeon selected.");
-            return;
-        }
+	private void OnPlayClicked()
+	{
+		if ( selected == null )
+		{
+			Debug.LogError( "No dungeon selected." );
+			return;
+		}
 
-        DungeonManager.StartDungeon(selected);
-    }
+		DungeonManager.StartDungeon( selected );
+	}
 }
