@@ -75,7 +75,7 @@ public class TileGenerator : MonoBehaviour
 	//     new Step('1',0,new []{0, -1}, 2)
 	// };
 	//
-	// private Step[] _tile2 = 
+	// private Step[] _tile2 =
 	// {
 	//     new Step('2',1,new []{0, 1}, 2),
 	//     new Step('2',1,new []{0, -1}, 3),
@@ -83,7 +83,7 @@ public class TileGenerator : MonoBehaviour
 	//     new Step('2',1,new []{0, 1}, 1)
 	// };
 	//
-	// private Step[] _tile3 = 
+	// private Step[] _tile3 =
 	// {
 	//     new Step('3',2,new []{-1, 0}, 1),
 	//     new Step('3',2,new []{-1, 0}, 2),
@@ -91,7 +91,7 @@ public class TileGenerator : MonoBehaviour
 	//     new Step('3',2,new []{0, -1}, 2)
 	// };
 	//
-	// private Step[] _tile4 = 
+	// private Step[] _tile4 =
 	// {
 	//     new Step('4',3,new []{0, 1}, 1),
 	//     new Step('4',3,new []{0, -1}, 1),
@@ -368,7 +368,8 @@ public class TileGenerator : MonoBehaviour
 
 				tileInstance.transform.localPosition = new Vector3( i * 4, 0, j * 4 );
 				tileInstance.GetComponent<BallroomTile>().Setup( this, _theDuckingFloor, _door, -1, maxLevel );
-				tileInstance.transform.GetChild( 0 ).GetComponent<MeshRenderer>().SetMaterials( new List<Material>() { symbols[Random.Range( 0, 4 )] } );
+				MeshRenderer meshRenderer = tileInstance.transform.GetChild( 0 ).GetComponent<MeshRenderer>();
+				meshRenderer.SetMaterials( new List<Material>() { meshRenderer.materials[0], symbols[Random.Range( 0, 4 )] } );
 				tileInstances[i, j] = tileInstance;
 
 			}
@@ -382,7 +383,8 @@ public class TileGenerator : MonoBehaviour
 		foreach ( Step currentStep in steps )
 		{
 			tileInstances[currentPosition[0], currentPosition[1]].GetComponent<BallroomTile>().Setup( this, _theDuckingFloor, _door, currentLevel, maxLevel );
-			tileInstances[currentPosition[0], currentPosition[1]].transform.GetChild( 0 ).GetComponent<MeshRenderer>().SetMaterials( new List<Material>() { symbols[currentStep.Id] } );
+			MeshRenderer meshRenderer = tileInstances[currentPosition[0], currentPosition[1]].transform.GetChild( 0 ).GetComponent<MeshRenderer>();
+			meshRenderer.SetMaterials( new List<Material>() {meshRenderer.materials[0], symbols[currentStep.Id] } );
 			currentLevel++;
 			for ( int j = 0; j < currentStep.NbSteps; j++ )
 			{
