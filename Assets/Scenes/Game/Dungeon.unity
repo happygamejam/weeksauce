@@ -230,26 +230,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1177914275388150030, guid: 6fae223d5ea92f2b78b17cf89960ea74, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.63810194
-      objectReference: {fileID: 0}
-    - target: {fileID: 1177914275388150030, guid: 6fae223d5ea92f2b78b17cf89960ea74, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0.304161
-      objectReference: {fileID: 0}
-    - target: {fileID: 1177914275388150030, guid: 6fae223d5ea92f2b78b17cf89960ea74, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0.6383463
-      objectReference: {fileID: 0}
-    - target: {fileID: 1177914275388150030, guid: 6fae223d5ea92f2b78b17cf89960ea74, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0.3046735
-      objectReference: {fileID: 0}
-    - target: {fileID: 1177914275388150030, guid: 6fae223d5ea92f2b78b17cf89960ea74, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 51
-      objectReference: {fileID: 0}
     - target: {fileID: 2856276535002631809, guid: 6fae223d5ea92f2b78b17cf89960ea74, type: 3}
       propertyPath: m_Name
       value: BallRoom
