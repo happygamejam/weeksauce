@@ -143,6 +143,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: fac2fe0ce4c00d84692d977eee384dc8, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1681785101853716721}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: fac2fe0ce4c00d84692d977eee384dc8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7897460968564834256}
     - targetCorrespondingSourceObject: {fileID: -7312894616356409556, guid: fac2fe0ce4c00d84692d977eee384dc8, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3828163571165947827}
@@ -297,3 +300,17 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 6.5977807, y: 3.4236164, z: 0.4478396}
   m_Center: {x: -0.0071320534, y: 7.8659906, z: -9.669702e-18}
+--- !u!114 &7897460968564834256
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4394811285522216719}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03a4c2ef77e1e6849a9186e398c21699, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  soundManager: {fileID: 0}
+  doorSound: {fileID: 11400000, guid: 0d9f168d9ae77514596e221ace3bcd97, type: 2}

@@ -10,8 +10,13 @@ namespace Rooms.SymbolsLabyrinth
 	{
 		[SerializeField] private GameObject imageNode;
 		[SerializeField] private Sprite[] feuillesMusique;
+		SoundManager _soundManager;
+		[SerializeField] Sound sheetSound;
 
-
+		private void OnEnable()
+		{
+			_soundManager = FindObjectOfType<SoundManager>();
+		}
 		public void SpawnLibrary(int tileIndex)
 		{
 			Debug.Log("Tuile # " + (tileIndex + 1) + " à partir de la gauche" );
@@ -21,11 +26,15 @@ namespace Rooms.SymbolsLabyrinth
 		public void OnTriggerEnter(Collider other)
 		{
 			imageNode.SetActive(true);
+			_soundManager.PlaySoundEffect( sheetSound );
+			
 		}
 
 		public void OnTriggerExit(Collider other)
 		{
 			imageNode.SetActive(false);
+			_soundManager.PlaySoundEffect( sheetSound );
+
 		}
 	}
 }

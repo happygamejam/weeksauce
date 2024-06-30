@@ -26,4 +26,16 @@ public class SoundManager : MonoBehaviour
 		musicAudioSource.loop = sound.loop;
 		musicAudioSource.Play();
 	}
+
+
+	public void StopSong()
+	{
+		musicAudioSource.clip = null;
+	}
+
+	public void StopSoundEffect()
+	{
+		sfxAudioSource.clip = null;
+
+	}
 }

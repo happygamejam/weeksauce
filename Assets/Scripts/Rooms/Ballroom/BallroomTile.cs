@@ -18,10 +18,14 @@ public class BallroomTile : MonoBehaviour
 
 	private GameObject _cube;
 	private GameObject _door;
-
+	private bool doorIsOpen = false;
+	private SoundManager _soundManager;
+	[SerializeField] private Sound deathSoundEffect;
+		
 	public void OnEnable()
 	{
 		_cube = transform.GetChild( 0 ).gameObject;
+		_soundManager = FindObjectOfType<SoundManager>();
 	}
 
 	public void Setup(TileGenerator newMaster, GameObject theDuckingFloor, GameObject door, int newCheckpointLevel, int maxLevel)
@@ -74,12 +78,19 @@ public class BallroomTile : MonoBehaviour
 
 		if ( _level == _maxLevel )
 		{
-			_door.gameObject.GetComponent<Animator>().SetTrigger("Open");
+			if (!_door.GetComponent<Door>().isOpen)
+			{
+				_door.gameObject.GetComponent<Animator>().SetTrigger("Open");
+				_door.GetComponent<Door>().OpenDoor();
+			}
 		}
 	}
 
 	IEnumerator KillChar()
 	{
+		_soundManager.StopSong();
+		_soundManager.PlaySoundEffect( deathSoundEffect );
+		
 		yield return new WaitForSeconds( 2 );
 		SceneManager.LoadScene( "GameOver" );
 	}

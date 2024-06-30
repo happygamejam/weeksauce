@@ -67,6 +67,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 398c191c6c37fd74088eb93f6944c032, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  deathSoundEffect: {fileID: 11400000, guid: c6d19f5ff729c37449915215195386e5, type: 2}
+  doorSoundEffect: {fileID: 11400000, guid: 0d9f168d9ae77514596e221ace3bcd97, type: 2}
 --- !u!1 &5834872443076864817
 GameObject:
   m_ObjectHideFlags: 0
