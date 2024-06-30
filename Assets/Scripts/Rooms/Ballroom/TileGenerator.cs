@@ -1,11 +1,8 @@
 using System;
 using System.Collections.Generic;
-using NUnit.Framework;
 using Rooms.RochesColorees;
 using Rooms.SymbolsLabyrinth;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 public class TileGenerator : MonoBehaviour
