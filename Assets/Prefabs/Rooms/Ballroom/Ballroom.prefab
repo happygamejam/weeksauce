@@ -2226,6 +2226,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 6c37105ec1c764b41a5c9bb498ebe84d, type: 3}
   - {fileID: 21300000, guid: 05565bd1ca574a945a346723e8e5bbb2, type: 3}
   - {fileID: 21300000, guid: 88a865f483b88e448bbf79d610404afe, type: 3}
+  sheetSound: {fileID: 11400000, guid: 71e260a0ed9e6504eac2fa1930eff6ca, type: 2}
 --- !u!65 &5718805922321110396
 BoxCollider:
   m_ObjectHideFlags: 0
