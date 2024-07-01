@@ -1,12 +1,14 @@
 #background {
     flex-grow: 1;
-    align-items: center;
+    align-items: flex-start;
     justify-content: flex-start;
     margin-top: 10px;
+    margin-left: 10px;
 }
 
 #timer {
-    color: rgb(0, 0, 0);
+    color: rgb(255, 255, 255);
+    background-color: rgb(0, 0, 0);
     font-size: 48px;
     width: auto;
 }

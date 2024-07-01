@@ -103,7 +103,7 @@ public class TileGenerator : MonoBehaviour
 	// Start is called once before the first execution of Update after the MonoBehaviour is created
 	void Start()
 	{
-		_propVariationValue = _propSpawner.GetPropVariationValue() % 3;
+		_propVariationValue = _propSpawner.GetPropVariationValue();
 		_tiles = new char[sizeX, sizeY];
 		_rule[0] = _tile1;
 		_rule[1] = _tile2;
