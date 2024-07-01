@@ -314,7 +314,7 @@ public class TileGenerator : MonoBehaviour
 				}
 				break;
 			case 2:
-				_previousIndex = stepFound.NbSteps;
+				_previousIndex = stepFound.NbSteps - 1;
 				break;
 		}
 
