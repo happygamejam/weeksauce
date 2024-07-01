@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: PianoNote
   m_EditorClassIdentifier: 
   clip: {fileID: 8300000, guid: fca1dd89806ae3e499441cb8951292d7, type: 3}
-  volume: 1
+  volume: 0.5
   pitch: 1
   loop: 0

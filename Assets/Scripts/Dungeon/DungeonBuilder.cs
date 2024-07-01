@@ -57,6 +57,13 @@ public class DungeonBuilder : MonoBehaviour
 					Destroy( obj );
 				}
 			}
+			if ( i != parameters.roomCount - 1 )
+			{
+				foreach ( GameObject obj in FindChildrenWithTag( room.gameObject, "ChainDeletePre" ) )
+				{
+					Destroy( obj );
+				}
+			}
 
 			room.SetPlayerSpawner( playerSpawner );
 			room.DisableCamera();

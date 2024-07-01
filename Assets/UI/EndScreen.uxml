@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="EndScreen.uss" />
+    <ui:VisualElement name="background">
+        <ui:VisualElement name="main-container">
+            <ui:Label text = "Congratulations" name="game-over-label" />
+            <ui:VisualElement name="button-container">
+                <ui:Button text="Return to main menu" name="return-button" class="button" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

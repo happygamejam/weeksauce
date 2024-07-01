@@ -1,0 +1,40 @@
+#background {
+    flex-grow: 1;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(26, 26, 26);
+}
+
+#main-container {
+    height: 50%;
+    justify-content: space-around;
+    align-items: center;
+}
+
+#button-container {
+    
+}
+
+#game-over-label {
+    font-size: 48px;
+    color: rgb(212, 212, 212);
+}
+
+.button {
+    height: 48px;
+    width: 100%;
+    border-width: 0px;
+    border-radius: 8px;
+
+    -unity-font-style: bold;
+    font-size: 24px;
+    color: rgb(212, 212, 212);
+}
+
+#return-button {
+    background-color: rgb(132, 0, 0);
+}
+
+#return-button:hover {
+    background-color: rgb(160, 0, 0);
+}
